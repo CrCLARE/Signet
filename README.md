@@ -56,6 +56,7 @@ No servers to maintain. No monthly bills. Runs entirely on Cloudflare's free tie
 
 ## Repository Structure
 
+```
 Signet/
 ├── backend/          Cloudflare Workers backend
 │   ├── src/          Source code
@@ -66,6 +67,7 @@ Signet/
 ├── docs/             Documentation (see dev.crclare.top)
 ├── LICENSE           Apache License 2.0
 └── NOTICE            Attribution
+```
 
 ## Documentation
 
@@ -93,7 +95,7 @@ You cannot:
 
 **Made by** CLARE ([CLARE-XHL](https://github.com/CLARE-XHL))
 
-**Design by** Rice porridge (Climser), Old Bei (Bro eagle), Dieyi (Dieyi my), Cloud (Xiaoyun), rain (Marquis)
+**Designed by** Rice porridge (Climser), Old Bei (Bro eagle), Dieyi (Dieyi my), Cloud (Xiaoyun), rain (Marquis)
 
 ## Links
 
