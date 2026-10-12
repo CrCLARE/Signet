@@ -56,6 +56,7 @@ Signet 处理的是运营一个授权产品时最琐碎、最容易出错的部�
 
 ## 仓库结构
 
+```
 Signet/
 ├── backend/          Cloudflare Workers 后端
 │   ├── src/          源码
@@ -66,6 +67,7 @@ Signet/
 ├── docs/             文档（见 dev.crclare.top）
 ├── LICENSE           Apache License 2.0
 └── NOTICE            署名
+```
 
 ## 文档
 
