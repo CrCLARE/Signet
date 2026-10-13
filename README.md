@@ -10,7 +10,9 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Cloudflare%20Workers-orange)](https://workers.cloudflare.com/)
-[![Status](https://img.shields.io/badge/status-V1.0--release-yellow)](https://github.com/CrCLARE/Signet)
+[![Status](https://img.shields.io/badge/status-V1.0--release-green)](https://github.com/CrCLARE/Signet)
+[![Release](https://img.shields.io/github/v/release/CrCLARE/Signet)](https://github.com/CrCLARE/Signet/releases)
+[![Stars](https://img.shields.io/github/stars/CrCLARE/Signet)](https://github.com/CrCLARE/Signet/stargazers)
 
 ---
 
