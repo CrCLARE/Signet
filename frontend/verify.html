@@ -1,0 +1,418 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>License lookup — Signet</title>
+  <meta name="description" content="Verify whether a product has a valid license. Public lookup — no login required." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top'
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .hero-bg {
+      background:
+        radial-gradient(900px 360px at 50% -10%, rgba(59,130,246,.28), transparent 60%),
+        radial-gradient(700px 300px at 85% 10%, rgba(96,165,250,.18), transparent 55%),
+        linear-gradient(180deg,#0f172a 0%,#1e293b 45%,#0f172a 100%);
+    }
+    .vp-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .search-input {
+      background-color: #0b1020;
+      border: 1px solid #1e2942;
+      color: #e5e7eb;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.2);
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      border: 1px solid #2563eb;
+      box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);
+      transition: transform .2s ease, filter .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .result-item { transition: border-color .25s ease, transform .2s ease; }
+    .result-item:hover { border-color: #3b82f6; transform: translateY(-1px); }
+    .badge-verified {
+      background: rgba(16,185,129,.15);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,.3);
+    }
+    .badge-banned {
+      background: rgba(239,68,68,.15);
+      color: #f87171;
+      border: 1px solid rgba(248,113,113,.3);
+    }
+    .empty-state {
+      background:
+        radial-gradient(600px 200px at 50% 0%, rgba(59,130,246,.1), transparent 60%),
+        #131c33;
+      border: 1px dashed #1e2942;
+    }
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #3b82f6;
+      border-top-color: transparent;
+      border-radius: 9999px;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[17px] tracking-tight text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span id="brandName">Signet</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-[14px] font-medium">
+        <a href="/">Home</a>
+        <a href="/verify.html" class="text-white">Lookup</a>
+        <a href="/buy.html">Pricing</a>
+        <a id="navDocs" href="#" target="_blank">Docs</a>
+        <a id="navRepo" href="#" target="_blank">GitHub</a>
+        <span class="w-px h-4 bg-white/15"></span>
+        <a href="/login.html" class="text-slate-300 hover:text-white transition-colors">Sign in</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-bg overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 pt-20 pb-12 text-center">
+      <div class="mb-4 text-[13px] font-semibold tracking-[0.18em] text-brand-300">
+        PUBLIC LICENSE LOOKUP
+      </div>
+      <h1 class="text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.12] tracking-tight text-white">
+        Verify a license
+      </h1>
+      <p class="mt-5 text-[16px] leading-relaxed text-slate-300 max-w-2xl mx-auto">
+        Enter a product name, a studio name, or a Product ID to check whether it has a valid license.
+        No login required.
+      </p>
+    </div>
+  </section>
+
+  <!-- Search -->
+  <div class="max-w-4xl mx-auto px-6 -mt-4 pb-16">
+
+    <div class="vp-card p-6 md:p-8">
+      <form id="searchForm" class="flex flex-col md:flex-row gap-3">
+        <input
+          id="searchInput"
+          type="text"
+          maxlength="64"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Product name, studio name, or Product ID"
+          class="search-input flex-1 px-5 py-3.5 rounded-xl text-[15px]"
+        />
+        <button
+          type="submit"
+          id="searchBtn"
+          class="btn-primary px-7 py-3.5 rounded-xl font-semibold text-[15px] whitespace-nowrap"
+        >
+          Search
+        </button>
+      </form>
+      <p class="mt-3 text-[12.5px] text-slate-500">
+        Fuzzy match. Only products with an active license are listed.
+      </p>
+    </div>
+
+    <div id="resultArea" class="mt-8 space-y-3"></div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-10 bg-[#0b1020]">
+    <div class="max-w-7xl mx-auto px-6 text-center text-[13px] text-slate-400">
+      <p class="text-[14px] font-medium text-slate-200">
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+      </p>
+      <div class="mt-5 flex justify-center gap-6 text-[13px] font-medium text-slate-300 flex-wrap">
+        <a href="/" class="hover:text-brand-400 transition-colors">Home</a>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-brand-400 transition-colors">Docs</a>
+        <a id="footerRepo" href="#" target="_blank" class="hover:text-brand-400 transition-colors">GitHub</a>
+      </div>
+      <p class="mt-5 text-[12px] text-slate-500">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300 transition-colors">
+          Signet
+        </a>
+        · Licensed under Apache 2.0
+      </p>
+    </div>
+  </footer>
+
+  <script src="/assets/auth.js"></script>
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+
+      document.title = 'License lookup — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setHref('navDocs', cfg.docsUrl);
+      setHref('navRepo', cfg.repoUrl);
+      setHref('footerDocs', cfg.docsUrl);
+      setHref('footerRepo', cfg.repoUrl);
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // Refs
+    // ============================================================
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const area = document.getElementById('resultArea');
+
+    // ============================================================
+    // Utilities
+    // ============================================================
+    function escapeHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, m => ({
+        '&': '&',
+        '<': '<',
+        '>': '>',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m]));
+    }
+
+    function formatDate(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+    }
+
+    // ============================================================
+    // Render states
+    // ============================================================
+    function renderLoading() {
+      area.innerHTML = `
+        <div class="vp-card p-10 text-center">
+          <span class="spinner"></span>
+          <p class="mt-3 text-[14px] text-slate-400">Searching…</p>
+        </div>
+      `;
+    }
+
+    function renderEmpty(message, queryTime) {
+      area.innerHTML = `
+        <div class="text-[12.5px] text-slate-500 mb-3 pl-1 text-right">
+          Query time: ${queryTime || '—'}
+        </div>
+        <div class="empty-state rounded-2xl p-10 text-center">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.6" class="mx-auto mb-3">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M20 20l-3.5-3.5"/>
+          </svg>
+          <p class="text-[14px] text-slate-400">${escapeHtml(message)}</p>
+        </div>
+      `;
+    }
+
+    function renderResults(data) {
+      const list = data.results || [];
+      const q = data.query || '';
+
+      if (!list.length) {
+        renderEmpty(
+          `No licensed products match "${q}"`,
+          data.queried_at_text
+        );
+        return;
+      }
+
+      area.innerHTML = `
+        <div class="text-[12.5px] text-slate-500 mb-3 pl-1 flex items-center justify-between flex-wrap gap-2">
+          <span>${list.length} result${list.length > 1 ? 's' : ''}</span>
+          <span>Query time: ${data.queried_at_text || '—'}</span>
+        </div>
+      ` + list.map(item => {
+        const isValid = !item.banned;
+
+        const badge = isValid
+          ? `<span class="badge-verified inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11.5px] font-semibold">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+               </svg>
+               Licensed
+             </span>`
+          : `<span class="badge-banned inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11.5px] font-semibold">
+               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+               </svg>
+               Revoked
+             </span>`;
+
+        // Show ban reason only if there is one
+        let reasonHtml = '';
+        if (!isValid && item.ban_reason) {
+          const reason = String(item.ban_reason);
+          const display = reason.length > 60 ? reason.slice(0, 60) + '…' : reason;
+          reasonHtml = `
+            <div class="mt-3 p-3 rounded-lg" style="background:rgba(239,68,68,.08);border:1px solid rgba(248,113,113,.2);">
+              <div class="text-[11.5px] text-red-300 font-medium mb-1">Revoked reason</div>
+              <div class="text-[13px] text-slate-300" title="${escapeHtml(reason)}">${escapeHtml(display)}</div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="result-item vp-card p-6 flex flex-col md:flex-row md:items-start md:justify-between gap-4"
+               style="${isValid ? '' : 'opacity:0.9;'}">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-[17px] font-semibold text-slate-50 truncate">
+                  ${escapeHtml(item.product_name)}
+                </h3>
+                ${badge}
+              </div>
+              <div class="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[13px] text-slate-400">
+                <span>Studio: <span class="text-slate-300">${escapeHtml(item.studio_name)}</span></span>
+                <span>Licensed: <span class="text-slate-300">${formatDate(item.created_at)}</span></span>
+              </div>
+              ${reasonHtml}
+            </div>
+            <div class="text-[11.5px] text-slate-500 md:text-right flex-shrink-0">
+              <div>Product ID</div>
+              <div class="font-mono text-slate-400 mt-0.5 break-all">
+                ${escapeHtml(item.product_uid)}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ============================================================
+    // Search
+    // ============================================================
+    async function doSearch() {
+      const q = input.value.trim();
+      if (!q) {
+        input.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Searching…';
+      renderLoading();
+
+      try {
+        const res = await fetch(
+          (window.SIGNET_CONFIG?.apiBase || '') +
+          '/api/public/search?q=' + encodeURIComponent(q)
+        );
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Search failed');
+        renderResults(data);
+      } catch (e) {
+        renderEmpty(e.message || 'Search failed. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search';
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      doSearch();
+    });
+
+    // Support ?q=xxx
+    const urlParams = new URLSearchParams(location.search);
+    const presetQ = urlParams.get('q');
+    if (presetQ) {
+      input.value = presetQ;
+      doSearch();
+    }
+  </script>
+</body>
+</html>

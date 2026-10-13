@@ -1,0 +1,56 @@
+ # ============================================================
+# Signet - Cloudflare Workers configuration
+#
+# Before deploying, replace the placeholder values marked with
+# <ANGLE_BRACKETS>. See docs/deploy.md for the full walkthrough.
+# ============================================================
+
+name = "signet-backend"
+main = "src/index.js"
+compatibility_date = "2024-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ------------------------------------------------------------
+# D1 database binding
+#
+# After running `wrangler d1 create signet-db`, copy the
+# database_id into the field below.
+# ------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "signet-db"
+database_id = "<YOUR_D1_DATABASE_ID>"
+
+# ------------------------------------------------------------
+# Environment variables
+#
+# Only non-secret values go here. Everything below this block
+# must be set as a Secret via `wrangler secret put` or the
+# Cloudflare dashboard.
+# ------------------------------------------------------------
+[vars]
+# The origin(s) allowed to call this Worker.
+# Comma-separated for multiple. Use "*" only for local testing.
+ALLOWED_ORIGIN = "https://example.com"
+
+# ------------------------------------------------------------
+# Required Secrets (set via `wrangler secret put <NAME>`)
+#
+#   JWT_SECRET                 - HMAC secret for user JWTs (hex, 64 chars)
+#   ADMIN_USERNAME             - administrator login name
+#   ADMIN_PASSWORD_HASH        - PBKDF2-SHA256 hash (hex)
+#   ADMIN_PASSWORD_SALT        - PBKDF2 salt (hex)
+#   ADMIN_JWT_SECRET           - HMAC secret for admin JWTs (hex, 64 chars)
+#   LICENSE_SIGN_PRIVATE_KEY   - Ed25519 private key (hex, 64 chars)
+#   LICENSE_SIGN_PUBLIC_KEY    - Ed25519 public key (hex, 64 chars)
+#
+# Optional Secrets (only if you enable the corresponding adapter):
+#
+#   AFDIAN_USER_ID             - Afdian creator user_id
+#   AFDIAN_TOKEN               - Afdian API token
+#
+# Optional Vars (safe to set here or as Secrets):
+#
+#   USER_TOKEN_TTL             - user JWT lifetime in seconds (default 2592000 = 30 days)
+#   ADMIN_TOKEN_TTL            - admin JWT lifetime in seconds (default 43200 = 12 hours)
+# ------------------------------------------------------------

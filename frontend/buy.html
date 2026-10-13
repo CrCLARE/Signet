@@ -1,0 +1,455 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — Signet</title>
+  <meta name="description" content="Choose a plan and get started." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!--
+    SIGNET_CONFIG.pricing — Edit this array to change the plans shown.
+    Each plan has:
+      name         : plan title
+      price        : display price (e.g. "$19.99" or "Free")
+      period       : optional suffix (e.g. "/ month")
+      description  : short subtitle
+      features     : array of strings
+      cta          : { label, url }  → where the button points
+      highlighted  : boolean, renders the plan with accent styling
+  -->
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top',
+      supportEmail: 'hi@example.com',
+      pricing: [
+        {
+          name: 'Starter',
+          price: 'Free',
+          period: '',
+          description: 'For hobbyists and small side projects.',
+          features: [
+            'Unlimited personal products',
+            'Public license lookup',
+            'Community support'
+          ],
+          cta: {
+            label: 'Get started',
+            url: '/register.html'
+          }
+        },
+        {
+          name: 'Pro',
+          price: '$19.99',
+          period: 'one-time',
+          description: 'For indie developers shipping commercial products.',
+          features: [
+            'Everything in Starter',
+            'Commercial products allowed',
+            'Offline licenses, valid forever',
+            'Priority email support'
+          ],
+          cta: {
+            label: 'Buy Pro',
+            url: '#'
+          },
+          highlighted: true
+        },
+        {
+          name: 'Studio',
+          price: 'Contact us',
+          period: '',
+          description: 'For teams and studios with multiple developers.',
+          features: [
+            'Everything in Pro',
+            'Multi-seat licensing',
+            'Custom integration support',
+            'SLA and invoicing'
+          ],
+          cta: {
+            label: 'Contact us',
+            url: 'mailto:hi@example.com'
+          }
+        }
+      ]
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .hero-bg {
+      background:
+        radial-gradient(900px 360px at 50% -10%, rgba(59,130,246,.28), transparent 60%),
+        radial-gradient(700px 300px at 85% 10%, rgba(96,165,250,.18), transparent 55%),
+        linear-gradient(180deg,#0f172a 0%,#1e293b 45%,#0f172a 100%);
+    }
+    .plan-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+    }
+    .plan-card.highlighted {
+      border-color: #3b82f6;
+      box-shadow:
+        0 12px 34px rgba(0,0,0,.35),
+        0 0 0 1px rgba(59,130,246,.35),
+        0 20px 50px -20px rgba(37,99,235,.5);
+    }
+    .plan-card.highlighted::before {
+      content: 'Most popular';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.6);
+    }
+    .plan-card { position: relative; }
+    .btn-primary {
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      border: 1px solid #2563eb;
+      box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);
+      transition: transform .2s ease, filter .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-ghost {
+      background-color: rgba(255,255,255,.06);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,.18);
+      transition: background-color .3s ease, border-color .3s ease;
+    }
+    .btn-ghost:hover { background-color: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); }
+    .check-icon {
+      flex: 0 0 auto;
+      margin-top: 2px;
+      color: #34d399;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[17px] tracking-tight text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span id="brandName">Signet</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-[14px] font-medium">
+        <a href="/">Home</a>
+        <a href="/verify.html">Lookup</a>
+        <a href="/buy.html" class="text-white">Pricing</a>
+        <a id="navDocs" href="#" target="_blank">Docs</a>
+        <a id="navRepo" href="#" target="_blank">GitHub</a>
+        <span class="w-px h-4 bg-white/15"></span>
+        <a href="/login.html" class="text-slate-300 hover:text-white transition-colors">Sign in</a>
+        <a href="/register.html"
+           class="px-4 py-2 rounded-xl font-semibold text-white text-[13.5px]"
+           style="background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%); box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);">
+          Get started
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-bg overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center">
+      <div class="mb-4 text-[13px] font-semibold tracking-[0.18em] text-brand-300">
+        PRICING
+      </div>
+      <h1 class="text-[clamp(2rem,4vw,2.8rem)] font-extrabold leading-[1.12] tracking-tight text-white">
+        Simple, honest pricing
+      </h1>
+      <p class="mt-5 text-[17px] leading-relaxed text-slate-300 max-w-2xl mx-auto">
+        Choose the plan that fits your project. Buy once, use forever.
+        No subscriptions, no hidden fees, no vendor lock-in.
+      </p>
+    </div>
+  </section>
+
+  <!-- Plans -->
+  <main class="max-w-6xl mx-auto px-6 -mt-4 pb-16">
+    <div id="planGrid" class="grid md:grid-cols-3 gap-6"></div>
+
+    <!-- Notes -->
+    <div class="mt-12 max-w-3xl mx-auto text-center text-[13.5px] text-slate-500 leading-relaxed space-y-2">
+      <p>
+        Prices shown are for this deployment. Replace the <code class="text-slate-300 bg-[#131c33] px-1.5 py-0.5 rounded text-[12px]">SIGNET_CONFIG.pricing</code>
+        array in <code class="text-slate-300 bg-[#131c33] px-1.5 py-0.5 rounded text-[12px]">buy.html</code>
+        to customize.
+      </p>
+      <p>
+        Need something else?
+        <a id="contactLink" href="#" class="text-brand-400 hover:text-brand-300 underline">Contact us</a>.
+      </p>
+    </div>
+  </main>
+
+  <!-- FAQ -->
+  <section class="max-w-4xl mx-auto px-6 pb-20">
+    <h2 class="text-[24px] font-bold text-slate-50 text-center mb-10">
+      Frequently asked questions
+    </h2>
+
+    <div class="space-y-3" id="faqList"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-10 bg-[#0b1020]">
+    <div class="max-w-7xl mx-auto px-6 text-center text-[13px] text-slate-400">
+      <p class="text-[14px] font-medium text-slate-200">
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+      </p>
+      <div class="mt-5 flex justify-center gap-6 text-[13px] font-medium text-slate-300 flex-wrap">
+        <a href="/" class="hover:text-brand-400 transition-colors">Home</a>
+        <a href="/verify.html" class="hover:text-brand-400 transition-colors">License lookup</a>
+        <a href="/terms.html" class="hover:text-brand-400 transition-colors">Terms</a>
+        <a href="/privacy.html" class="hover:text-brand-400 transition-colors">Privacy</a>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-brand-400 transition-colors">Docs</a>
+      </div>
+      <p class="mt-5 text-[12px] text-slate-500">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300 transition-colors">
+          Signet
+        </a>
+        · Licensed under Apache 2.0
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+
+      document.title = 'Pricing — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setHref('navDocs', cfg.docsUrl);
+      setHref('navRepo', cfg.repoUrl);
+      setHref('footerDocs', cfg.docsUrl);
+
+      if (cfg.supportEmail) {
+        const subject = encodeURIComponent('[' + brandName + '] Sales inquiry');
+        setHref('contactLink', 'mailto:' + cfg.supportEmail + '?subject=' + subject);
+      }
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // Render plans
+    // ============================================================
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({
+        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+
+    function renderPlans() {
+      const cfg = window.SIGNET_CONFIG || {};
+      const plans = cfg.pricing;
+
+      if (!Array.isArray(plans) || plans.length === 0) {
+        document.getElementById('planGrid').innerHTML = `
+          <div class="md:col-span-3 text-center py-12 text-slate-500 text-[14px]">
+            No pricing plans configured. Add a <code class="text-slate-300">pricing</code> array to <code class="text-slate-300">SIGNET_CONFIG</code> in this file.
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('planGrid').innerHTML = plans.map(p => {
+        const highlighted = p.highlighted ? ' highlighted' : '';
+
+        const features = (p.features || []).map(f => `
+          <div class="flex items-start gap-3 text-[13.5px] text-slate-300 leading-relaxed">
+            <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>${escapeHtml(f)}</span>
+          </div>
+        `).join('');
+
+        const ctaLabel = escapeHtml(p.cta?.label || 'Get started');
+        const ctaUrl   = escapeHtml(p.cta?.url || '#');
+        const btnClass = p.highlighted ? 'btn-primary' : 'btn-ghost';
+
+        const periodHtml = p.period
+          ? `<span class="text-[13px] text-slate-500 ml-1">${escapeHtml(p.period)}</span>`
+          : '';
+
+        return `
+          <div class="plan-card${highlighted} p-7">
+            <h3 class="text-[18px] font-bold text-slate-50">${escapeHtml(p.name || '')}</h3>
+            <p class="mt-1 text-[13px] text-slate-400 leading-snug min-h-[36px]">
+              ${escapeHtml(p.description || '')}
+            </p>
+
+            <div class="mt-5 mb-6">
+              <span class="text-[32px] font-extrabold tracking-tight text-white">
+                ${escapeHtml(p.price || '')}
+              </span>
+              ${periodHtml}
+            </div>
+
+            <div class="space-y-3 mb-7 flex-1">
+              ${features}
+            </div>
+
+            <a href="${ctaUrl}"
+               class="${btnClass} block text-center px-5 py-3 rounded-xl font-semibold text-[14.5px]">
+              ${ctaLabel}
+            </a>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ============================================================
+    // FAQ (edit inline or leave as defaults)
+    // ============================================================
+    const FAQ_ITEMS = [
+      {
+        q: 'How does licensing work?',
+        a: 'After purchase, you receive an order number. Sign in to your account and bind it. You can then create products and download signed license files for each one. Licenses are verified offline by your application.'
+      },
+      {
+        q: 'Do I need to run a server?',
+        a: 'No. This platform is entirely deployed on Cloudflare Workers and D1 — both come with generous free tiers. Your users only contact the platform when binding an order or downloading a license.'
+      },
+      {
+        q: 'Are licenses time-limited?',
+        a: 'No. Once a license file is issued, it is valid forever. Your application verifies it locally using the public key embedded in your build.'
+      },
+      {
+        q: 'What happens if I lose my license file?',
+        a: 'Sign in to your account and download it again at any time. The license tied to your order is always available from your dashboard.'
+      },
+      {
+        q: 'Can I get a refund?',
+        a: 'Refund policy is set by the operator of this deployment. Contact support if you have any concerns.'
+      }
+    ];
+
+    function renderFaq() {
+      const faqList = document.getElementById('faqList');
+      faqList.innerHTML = FAQ_ITEMS.map((item, i) => `
+        <details class="vp-card p-0 overflow-hidden" ${i === 0 ? 'open' : ''}>
+          <summary class="cursor-pointer list-none px-6 py-4 flex items-center justify-between gap-4 text-[15px] font-medium text-slate-100 hover:bg-white/[.02] transition-colors">
+            <span>${escapeHtml(item.q)}</span>
+            <svg class="faq-arrow flex-shrink-0 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </summary>
+          <div class="px-6 pb-5 -mt-1 text-[14px] leading-relaxed text-slate-400">
+            ${escapeHtml(item.a)}
+          </div>
+        </details>
+      `).join('');
+    }
+
+    // Rotate the chevron when a FAQ is open
+    document.addEventListener('click', (e) => {
+      const summary = e.target.closest('summary');
+      if (!summary) return;
+      const arrow = summary.querySelector('.faq-arrow');
+      if (arrow) {
+        // Let the browser update the open state first
+        requestAnimationFrame(() => {
+          const isOpen = summary.parentElement.open;
+          arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+      }
+    });
+
+    // ============================================================
+    // Init
+    // ============================================================
+    renderPlans();
+    renderFaq();
+  </script>
+
+  <style>
+    /* Details/summary polish */
+    summary::-webkit-details-marker { display: none; }
+    .faq-arrow { transform: rotate(0deg); }
+    details[open] .faq-arrow { transform: rotate(180deg); }
+  </style>
+</body>
+</html>

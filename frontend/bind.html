@@ -1,0 +1,519 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bind order — Signet</title>
+  <meta name="robots" content="noindex" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top',
+      supportEmail: 'hi@example.com'
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(900px 360px at 50% -10%, rgba(59,130,246,.25), transparent 60%), #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .auth-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .input-field {
+      background-color: #0b1020;
+      border: 1px solid #1e2942;
+      color: #e5e7eb;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.2);
+    }
+    .input-field.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.15);
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);
+      transition: transform .2s ease, filter .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
+    .provider-card {
+      background: #0b1020;
+      border: 1px solid #1e2942;
+      border-radius: 14px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: border-color .2s ease, background-color .2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .provider-card:hover {
+      border-color: #3b82f6;
+      background: rgba(59,130,246,.04);
+    }
+    .provider-card.selected {
+      border-color: #3b82f6;
+      background: rgba(59,130,246,.10);
+    }
+    .provider-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 9999px;
+      border: 2px solid #475569;
+      transition: all .2s ease;
+      flex-shrink: 0;
+    }
+    .provider-card.selected .provider-dot {
+      border-color: #3b82f6;
+      background: #3b82f6;
+      box-shadow: inset 0 0 0 2px #0b1020;
+    }
+    .field-hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(59,130,246,.15);
+      color: #60a5fa;
+      font-weight: 700;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .success-banner {
+      background: linear-gradient(180deg, rgba(16,185,129,.12) 0%, rgba(52,211,153,.08) 100%);
+      border: 1px solid rgba(52,211,153,.35);
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #6ee7b7;
+    }
+    .warn-banner {
+      background: linear-gradient(180deg, rgba(234,179,8,.10) 0%, rgba(250,204,21,.06) 100%);
+      border: 1px solid rgba(250,204,21,.30);
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #fcd34d;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[16px] tracking-tight text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span id="brandName">Signet</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <span id="nicknameDisplay" class="text-[13px] text-slate-400"></span>
+        <a href="/dashboard.html" class="text-[13px] text-slate-400 hover:text-slate-200">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-2xl mx-auto px-6 py-12">
+
+    <!-- Hero -->
+    <div class="text-center mb-10">
+      <div class="mb-3 text-[12px] font-semibold tracking-[0.18em] text-brand-300 uppercase">
+        Step 1 of 2
+      </div>
+      <h1 class="text-[28px] font-extrabold tracking-tight text-white">
+        Bind your order
+      </h1>
+      <p class="mt-3 text-[15px] leading-relaxed text-slate-400">
+        Paste the order number you received after payment to activate your license.
+      </p>
+    </div>
+
+    <!-- Status card (shows if already bound) -->
+    <div id="alreadyBoundCard" class="hidden auth-card p-6 mb-6">
+      <div class="success-banner">
+        <div class="flex items-start gap-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-0.5 flex-shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          <div>
+            <div class="font-semibold text-[15px]">Order already bound</div>
+            <div id="boundInfo" class="mt-1 text-[13px] opacity-90"></div>
+            <a href="/dashboard.html" class="mt-3 inline-block text-[13px] font-semibold underline">
+              Go to dashboard →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Binding form -->
+    <div id="bindFormCard" class="auth-card p-8">
+      <form id="bindForm" class="space-y-6" novalidate>
+
+        <!-- Provider selection -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="step-num">1</span>
+            <label class="text-[14px] font-semibold text-slate-200">Payment provider</label>
+          </div>
+          <div id="providerList" class="space-y-2">
+            <div class="text-[13px] text-slate-500 py-3 text-center">
+              Loading providers…
+            </div>
+          </div>
+          <p id="providerHint" class="field-hint"></p>
+        </div>
+
+        <!-- Order number -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="step-num">2</span>
+            <label for="orderNo" class="text-[14px] font-semibold text-slate-200">
+              Order number
+            </label>
+          </div>
+          <input
+            id="orderNo"
+            name="orderNo"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            class="input-field w-full px-4 py-3 rounded-xl text-[14px] font-mono"
+            placeholder="e.g. 202106232138371083454010626"
+          />
+          <p id="orderHint" class="field-hint"></p>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          id="submitBtn"
+          class="btn-primary w-full py-3 rounded-xl font-semibold text-[15px]"
+        >
+          Verify and bind
+        </button>
+
+        <p id="errorMsg" class="hidden text-[13px] text-red-400 text-center"></p>
+        <p id="successMsg" class="hidden text-[13px] text-emerald-400 text-center"></p>
+      </form>
+    </div>
+
+    <!-- Help -->
+    <div class="mt-8 text-center text-[12.5px] text-slate-500 leading-relaxed">
+      <p id="helpText">Where do I find my order number?</p>
+      <p class="mt-1">
+        Need help?
+        <a id="supportLink" href="#" class="text-brand-400 hover:text-brand-300 underline">
+          Contact support
+        </a>
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-6 bg-[#0b1020] mt-12">
+    <div class="max-w-7xl mx-auto px-6 text-center text-[12px] text-slate-500">
+      <p>
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+        <a href="/" class="hover:text-slate-300">Home</a>
+        <span class="mx-2 text-slate-700">·</span>
+        <a href="/dashboard.html" class="hover:text-slate-300">Dashboard</a>
+        <span class="mx-2 text-slate-700">·</span>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-slate-300">Docs</a>
+      </p>
+      <p class="mt-2">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300">
+          Signet
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="/assets/auth.js"></script>
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+
+      document.title = 'Bind order — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setHref('footerDocs', cfg.docsUrl);
+
+      if (cfg.supportEmail) {
+        const subject = encodeURIComponent('[' + brandName + '] Order binding help');
+        setHref('supportLink', 'mailto:' + cfg.supportEmail + '?subject=' + subject);
+      }
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // Auth guard
+    // ============================================================
+    AuthAPI.requireAuth();
+    const currentUser = AuthAPI.getUser();
+    if (currentUser) {
+      document.getElementById('nicknameDisplay').textContent = currentUser.nickname || '';
+    }
+
+    // ============================================================
+    // Refs
+    // ============================================================
+    const providerListEl = document.getElementById('providerList');
+    const providerHintEl = document.getElementById('providerHint');
+    const orderInput = document.getElementById('orderNo');
+    const orderHintEl = document.getElementById('orderHint');
+    const submitBtn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('errorMsg');
+    const okEl = document.getElementById('successMsg');
+    const alreadyBoundCard = document.getElementById('alreadyBoundCard');
+    const bindFormCard = document.getElementById('bindFormCard');
+    const helpTextEl = document.getElementById('helpText');
+
+    let selectedProvider = null;
+    let availableProviders = [];
+
+    // ============================================================
+    // Helpers
+    // ============================================================
+    function showError(msg) {
+      errEl.textContent = msg;
+      errEl.classList.remove('hidden');
+      okEl.classList.add('hidden');
+    }
+    function showSuccess(msg) {
+      okEl.textContent = msg;
+      okEl.classList.remove('hidden');
+      errEl.classList.add('hidden');
+    }
+    function clearMessages() {
+      errEl.classList.add('hidden');
+      okEl.classList.add('hidden');
+    }
+
+    orderInput.addEventListener('input', () => {
+      clearMessages();
+      orderInput.classList.remove('error');
+    });
+
+    // ============================================================
+    // Check current status
+    // ============================================================
+    async function checkStatus() {
+      try {
+        const status = await AuthAPI.getLicenseStatus();
+        if (status.active) {
+          alreadyBoundCard.classList.remove('hidden');
+          bindFormCard.classList.add('hidden');
+
+          const infoEl = document.getElementById('boundInfo');
+          infoEl.textContent =
+            `Provider: ${status.provider || '—'} · Order: ${status.order_no || '—'}` +
+            (status.issued_at_text ? ` · Bound: ${status.issued_at_text}` : '');
+          return true;
+        }
+      } catch (e) {
+        // Non-fatal: fall through and show the form
+        console.warn('License status check failed:', e.message);
+      }
+      return false;
+    }
+
+    // ============================================================
+    // Load providers
+    // ============================================================
+    async function loadProviders() {
+      try {
+        availableProviders = await AuthAPI.listAdapters();
+      } catch (e) {
+        providerListEl.innerHTML =
+          '<div class="text-[13px] text-red-400 py-3 text-center">Failed to load providers.</div>';
+        return;
+      }
+
+      const usable = availableProviders.filter(p => p.configured);
+
+      if (usable.length === 0) {
+        providerListEl.innerHTML =
+          '<div class="text-[13px] text-amber-400 py-3 text-center">' +
+          'No payment provider is configured on this server yet.' +
+          '</div>';
+        submitBtn.disabled = true;
+        return;
+      }
+
+      providerListEl.innerHTML = usable.map((p, i) => `
+        <div class="provider-card" data-provider="${escapeAttr(p.name)}">
+          <div class="provider-dot"></div>
+          <div class="flex-1">
+            <div class="text-[14px] font-medium text-slate-100">${escapeHtml(p.label || p.name)}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Auto-select if only one
+      if (usable.length === 1) {
+        selectProvider(usable[0].name);
+      }
+
+      // Bind click handlers
+      providerListEl.querySelectorAll('.provider-card').forEach(card => {
+        card.addEventListener('click', () => {
+          selectProvider(card.dataset.provider);
+        });
+      });
+    }
+
+    function selectProvider(name) {
+      selectedProvider = name;
+      providerListEl.querySelectorAll('.provider-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.provider === name);
+      });
+
+      // Adjust the order-number hint per provider
+      const hints = {
+        afdian: 'Find it on Afdian under “My Orders” after payment.',
+        stripe: 'It looks like pi_... or cs_... — from your Stripe receipt.'
+      };
+      const hint = hints[name];
+      if (hint) {
+        orderHintEl.textContent = hint;
+      } else {
+        orderHintEl.textContent = 'Paste the order number exactly as received.';
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({
+        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+    function escapeAttr(s) {
+      return escapeHtml(s);
+    }
+
+    // ============================================================
+    // Submit
+    // ============================================================
+    document.getElementById('bindForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearMessages();
+      orderInput.classList.remove('error');
+
+      if (!selectedProvider) {
+        return showError('Please select a payment provider');
+      }
+
+      const orderNo = orderInput.value.trim();
+      if (!orderNo) {
+        orderInput.classList.add('error');
+        orderInput.focus();
+        return showError('Please enter your order number');
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying…';
+
+      try {
+        await AuthAPI.bindOrder(orderNo, selectedProvider);
+        showSuccess('Order bound successfully! Redirecting…');
+
+        setTimeout(() => {
+          location.href = '/dashboard.html';
+        }, 1000);
+      } catch (err) {
+        showError(err.message || 'Binding failed');
+        orderInput.classList.add('error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Verify and bind';
+      }
+    });
+
+    // ============================================================
+    // Init
+    // ============================================================
+    (async function init() {
+      const bound = await checkStatus();
+      if (bound) return;
+
+      await loadProviders();
+    })();
+  </script>
+</body>
+</html>

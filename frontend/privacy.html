@@ -1,0 +1,581 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Signet</title>
+  <meta name="description" content="Privacy Policy for this platform." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      operatorName: 'Example Company',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top',
+      supportEmail: 'hi@example.com',
+      privacyEffectiveDate: 'October 12, 2026',
+      jurisdiction: 'the People’s Republic of China',
+      analyticsProvider: ''  // e.g. 'Google Analytics 4' — leave empty if none
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .hero-bg {
+      background:
+        radial-gradient(900px 360px at 50% -10%, rgba(59,130,246,.28), transparent 60%),
+        radial-gradient(700px 300px at 85% 10%, rgba(96,165,250,.18), transparent 55%),
+        linear-gradient(180deg,#0f172a 0%,#1e293b 45%,#0f172a 100%);
+    }
+    .legal-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .legal-body h2 {
+      font-size: 21px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-top: 44px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .legal-body h2:first-of-type { margin-top: 0; }
+    .legal-body h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-top: 26px;
+      margin-bottom: 10px;
+    }
+    .legal-body p {
+      font-size: 14.5px;
+      line-height: 1.85;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+    .legal-body ul, .legal-body ol {
+      margin: 12px 0 18px 0;
+      padding-left: 22px;
+    }
+    .legal-body li {
+      font-size: 14.5px;
+      line-height: 1.85;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .legal-body strong { color: #f1f5f9; font-weight: 600; }
+    .legal-body a {
+      color: #60a5fa;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .legal-body a:hover { color: #93c5fd; }
+    .legal-body code {
+      background: #0b1020;
+      border: 1px solid #1e2942;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 13px;
+      color: #93c5fd;
+    }
+    .legal-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 22px 0;
+      font-size: 14px;
+    }
+    .legal-body th, .legal-body td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+    .legal-body th {
+      background: rgba(59,130,246,.08);
+      color: #e2e8f0;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .callout {
+      background: linear-gradient(180deg, rgba(59,130,246,.10) 0%, rgba(37,99,235,.06) 100%);
+      border: 1px solid rgba(96,165,250,.30);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin: 18px 0;
+    }
+    .callout p { margin-bottom: 0; }
+    .callout.danger {
+      background: linear-gradient(180deg, rgba(239,68,68,.10) 0%, rgba(220,38,38,.05) 100%);
+      border-color: rgba(248,113,113,.30);
+    }
+    .toc {
+      background: #0f1729;
+      border: 1px solid #1e2942;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .toc-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .toc a {
+      display: block;
+      color: #94a3b8;
+      font-size: 14px;
+      padding: 5px 0;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .toc a:hover { color: #60a5fa; }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[17px] tracking-tight text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span id="brandName">Signet</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-[14px] font-medium">
+        <a href="/">Home</a>
+        <a href="/verify.html">Lookup</a>
+        <a href="/buy.html">Pricing</a>
+        <a id="navDocs" href="#" target="_blank">Docs</a>
+        <a id="navRepo" href="#" target="_blank">GitHub</a>
+        <a href="/login.html" class="text-slate-300 hover:text-white transition-colors">Sign in</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-bg overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center">
+      <div class="mb-4 text-[13px] font-semibold tracking-[0.18em] text-brand-300">
+        LEGAL
+      </div>
+      <h1 class="text-[clamp(2rem,4vw,2.6rem)] font-extrabold leading-[1.12] tracking-tight text-white">
+        Privacy Policy
+      </h1>
+      <p class="mt-4 text-[14px] text-slate-400">
+        Effective: <span id="effectiveDate">—</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <main class="max-w-4xl mx-auto px-6 pb-20 -mt-2">
+    <div class="legal-card p-8 md:p-12">
+
+      <nav class="toc">
+        <div class="toc-title">Contents</div>
+        <a href="#s1">1. Overview</a>
+        <a href="#s2">2. Data we collect</a>
+        <a href="#s3">3. How we use your data</a>
+        <a href="#s4">4. Cookies and local storage</a>
+        <a href="#s5">5. Third-party services</a>
+        <a href="#s6">6. Data storage and security</a>
+        <a href="#s7">7. Your rights</a>
+        <a href="#s8">8. Children's privacy</a>
+        <a href="#s9">9. Changes to this policy</a>
+        <a href="#s10">10. Contact</a>
+      </nav>
+
+      <div class="legal-body">
+
+        <h2 id="s1">1. Overview</h2>
+        <p>
+          This Privacy Policy explains how <strong id="operatorName">Example Company</strong>
+          ("we", "us", or "our") collects, uses, and protects your personal data when you
+          use the platform at <span id="siteUrl">this website</span> (the "Service").
+        </p>
+        <p>
+          We are committed to handling your personal data responsibly and transparently.
+          <strong>Please read this policy carefully.</strong> By using the Service, you
+          agree to the practices described here.
+        </p>
+        <p>
+          This policy should be read together with our
+          <a href="/terms.html">Terms of Service</a>.
+        </p>
+
+        <h2 id="s2">2. Data we collect</h2>
+
+        <h3>2.1 Information you provide directly</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Purpose</th>
+              <th>Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Email address</td>
+              <td>Account registration and sign-in</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Display name (nickname)</td>
+              <td>Shown on the public license lookup page</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Password (hashed)</td>
+              <td>Account authentication — stored as a PBKDF2-SHA256 hash, never in plaintext</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Order number</td>
+              <td>To bind a purchase to your account</td>
+              <td>Only when binding an order</td>
+            </tr>
+            <tr>
+              <td>Product names</td>
+              <td>To issue and manage licenses for your products</td>
+              <td>Only when creating products</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2.2 Information we do not collect</h3>
+        <p>
+          We do <strong>not</strong> collect your payment card details, bank account
+          information, or any encryption keys used by your products. Payment processing is
+          handled entirely by the third-party payment provider you choose.
+        </p>
+
+        <h3>2.3 Automatically collected technical data</h3>
+        <p>
+          When you make a request to the Service, our infrastructure provider (Cloudflare)
+          may log limited technical information such as the request timestamp and general
+          geographic region of the request. This data is used only for security, abuse
+          prevention, and service reliability.
+        </p>
+
+        <h2 id="s3">3. How we use your data</h2>
+        <p>We use the personal data we collect strictly to:</p>
+        <ul>
+          <li>Provide the Service, including account creation, sign-in, and order binding;</li>
+          <li>Issue licenses that you request;</li>
+          <li>Display your public display name and product names on the license lookup page;</li>
+          <li>Respond to your support requests, security reports, or refund inquiries;</li>
+          <li>Prevent fraud, abuse, and unauthorized access;</li>
+          <li>Comply with applicable legal obligations.</li>
+        </ul>
+        <p>
+          <strong>We do not sell, rent, or trade your personal data to any third party.</strong>
+          We do not use your data for advertising or profiling.
+        </p>
+
+        <h2 id="s4">4. Cookies and local storage</h2>
+
+        <h3>4.1 Local storage (essential)</h3>
+        <p>
+          The Service stores your sign-in session locally in your browser using
+          <code>localStorage</code>. This is required for the Service to work —
+          without it, you would need to sign in on every page.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Purpose</th>
+              <th>Lifetime</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>cs_auth_token</code></td>
+              <td>Your sign-in session (JWT)</td>
+              <td>Until expiry or sign-out</td>
+            </tr>
+            <tr>
+              <td><code>cs_auth_user</code></td>
+              <td>Cached display name and email for UI</td>
+              <td>Until sign-out</td>
+            </tr>
+            <tr>
+              <td><code>cs_admin_token</code></td>
+              <td>Administrator session (only on <code>/admin.html</code>)</td>
+              <td>Until expiry or sign-out</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>4.2 Analytics (optional)</h3>
+        <p id="analyticsLine">
+          <span id="analyticsNone">This deployment does not use any third-party analytics.</span>
+          <span id="analyticsYes" class="hidden">
+            This deployment uses <strong id="analyticsProviderName">a third-party analytics service</strong>
+            to understand aggregate traffic patterns. The analytics service may set cookies
+            to distinguish unique visitors. You can opt out via your browser's tracking
+            protection settings or a browser extension.
+          </span>
+        </p>
+
+        <h2 id="s5">5. Third-party services</h2>
+        <p>
+          The Service relies on the following third-party providers. Each has its own
+          privacy policy governing how it handles data passing through it:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Role</th>
+              <th>Privacy policy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cloudflare</td>
+              <td>Infrastructure (Workers, D1, Pages)</td>
+              <td><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a></td>
+            </tr>
+            <tr>
+              <td>Payment provider</td>
+              <td>Order processing and payment confirmation</td>
+              <td>See the provider you used to place your order</td>
+            </tr>
+          </tbody>
+        </table>
+        <p id="extraProvidersLine" class="hidden">
+          Additional providers configured for this deployment:
+        </p>
+        <ul id="extraProvidersList" class="hidden"></ul>
+
+        <h2 id="s6">6. Data storage and security</h2>
+        <p>
+          Your data is stored in Cloudflare's D1 database, distributed globally across
+          Cloudflare's network.
+        </p>
+        <ul>
+          <li>All communication between your browser and the Service is encrypted over HTTPS/TLS.</li>
+          <li>Passwords are stored as PBKDF2-SHA256 hashes with per-user salts; they are never stored or transmitted in plaintext.</li>
+          <li>Administrator credentials are stored in encrypted environment variables, not in the database.</li>
+          <li>Administrative actions are recorded in an audit log for accountability.</li>
+        </ul>
+        <p>
+          While we take reasonable measures to protect your data, no system is perfectly
+          secure. We cannot guarantee absolute security against all threats.
+        </p>
+
+        <h2 id="s7">7. Your rights</h2>
+        <p>Depending on your jurisdiction, you may have the right to:</p>
+        <ul>
+          <li><strong>Access</strong> the personal data we hold about you;</li>
+          <li><strong>Correct</strong> inaccurate data;</li>
+          <li><strong>Delete</strong> your account and personal data;</li>
+          <li><strong>Export</strong> a machine-readable copy of your data;</li>
+          <li><strong>Object</strong> to or restrict certain processing;</li>
+          <li><strong>Withdraw consent</strong> at any time.</li>
+        </ul>
+        <p>
+          To exercise any of these rights, contact us at
+          <a id="supportEmailLink" href="#">our support address</a>.
+          We will respond within a reasonable timeframe.
+        </p>
+        <div class="callout">
+          <p>
+            <strong>Deleting your account does not delete licenses already issued</strong>
+            and in the possession of your customers. Those licenses remain valid unless
+            separately revoked for cause, because they are cryptographically signed
+            offline and independent of your account.
+          </p>
+        </div>
+
+        <h2 id="s8">8. Children's privacy</h2>
+        <p>
+          The Service is not directed to children under the age of 13 (or the applicable
+          minimum age in your jurisdiction). We do not knowingly collect personal data
+          from children below this age. If you believe a child has provided us with
+          personal data, please contact us and we will delete it.
+        </p>
+
+        <h2 id="s9">9. Changes to this policy</h2>
+        <p>
+          We may update this Privacy Policy from time to time. When we do, we will update
+          the "Effective" date at the top of this page. Material changes will be announced
+          via the Service's website or by email.
+        </p>
+        <p>
+          Your continued use of the Service after a revision takes effect constitutes
+          acceptance of the revised policy.
+        </p>
+
+        <h2 id="s10">10. Contact</h2>
+        <p>For questions or concerns about this Privacy Policy, contact us at:</p>
+        <ul>
+          <li><strong>Email:</strong> <a id="contactEmailLink" href="#">—</a></li>
+          <li><strong>Documentation:</strong> <a id="docsLink" href="#" target="_blank">—</a></li>
+          <li><strong>Source code:</strong> <a id="repoLink" href="#" target="_blank">—</a></li>
+        </ul>
+
+        <p style="margin-top:44px;color:#64748b;font-size:13px;text-align:center;">
+          <span id="operatorFooter">Example Company</span> reserves the right of final interpretation of this Privacy Policy.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-10 bg-[#0b1020]">
+    <div class="max-w-7xl mx-auto px-6 text-center text-[13px] text-slate-400">
+      <p class="text-[14px] font-medium text-slate-200">
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+        <span id="footerOperator">Example Company</span>
+      </p>
+      <div class="mt-5 flex justify-center gap-6 text-[13px] font-medium text-slate-300 flex-wrap">
+        <a href="/" class="hover:text-brand-400 transition-colors">Home</a>
+        <a href="/terms.html" class="hover:text-brand-400 transition-colors">Terms</a>
+        <a href="/privacy.html" class="hover:text-brand-400 transition-colors">Privacy</a>
+        <a href="/verify.html" class="hover:text-brand-400 transition-colors">Lookup</a>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-brand-400 transition-colors">Docs</a>
+      </div>
+      <p class="mt-5 text-[12px] text-slate-500">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300 transition-colors">
+          Signet
+        </a>
+        · Licensed under Apache 2.0
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+      const operatorName = cfg.operatorName || brandName;
+      const email = cfg.supportEmail;
+
+      document.title = 'Privacy Policy — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setText('operatorName', operatorName);
+      setText('operatorFooter', operatorName);
+      setText('footerOperator', operatorName);
+      setText('effectiveDate', cfg.privacyEffectiveDate || '—');
+      setText('siteUrl', location.origin);
+
+      setHref('navDocs', cfg.docsUrl);
+      setHref('navRepo', cfg.repoUrl);
+      setHref('footerDocs', cfg.docsUrl);
+
+      // Analytics disclosure
+      if (cfg.analyticsProvider) {
+        document.getElementById('analyticsNone').classList.add('hidden');
+        document.getElementById('analyticsYes').classList.remove('hidden');
+        setText('analyticsProviderName', cfg.analyticsProvider);
+      }
+
+      // Support email links
+      if (email) {
+        const mailto = (subject) =>
+          'mailto:' + email + '?subject=' + encodeURIComponent('[' + brandName + '] ' + subject);
+        setHref('supportEmailLink', mailto('Privacy inquiry'));
+        setHref('contactEmailLink', 'mailto:' + email);
+        document.getElementById('contactEmailLink').textContent = email;
+      } else {
+        const el = document.getElementById('supportEmailLink');
+        if (el) {
+          el.removeAttribute('href');
+          el.style.textDecoration = 'none';
+          el.style.color = 'inherit';
+        }
+      }
+
+      // Docs + repo links
+      const docsLink = document.getElementById('docsLink');
+      const repoLink = document.getElementById('repoLink');
+
+      if (cfg.docsUrl) {
+        docsLink.href = cfg.docsUrl;
+        docsLink.textContent = cfg.docsUrl.replace(/^https?:\/\//, '');
+      } else {
+        docsLink.textContent = '—';
+      }
+
+      if (cfg.repoUrl) {
+        repoLink.href = cfg.repoUrl;
+        repoLink.textContent = cfg.repoUrl.replace(/^https?:\/\//, '');
+      } else {
+        repoLink.textContent = '—';
+      }
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

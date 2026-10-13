@@ -1,0 +1,715 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Signet</title>
+  <meta name="robots" content="noindex" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top',
+      supportEmail: 'hi@example.com'
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .vp-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .product-row {
+      background: #0b1020;
+      border: 1px solid #1e2942;
+      border-radius: 14px;
+      transition: border-color .25s ease;
+    }
+    .product-row:hover {
+      border-color: #3b82f6;
+    }
+    .input-field {
+      background-color: #0b1020;
+      border: 1px solid #1e2942;
+      color: #e5e7eb;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.2);
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);
+      transition: transform .2s ease, filter .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
+    .btn-ghost {
+      background-color: rgba(255,255,255,.06);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,.18);
+      transition: background-color .3s ease, border-color .3s ease;
+    }
+    .btn-ghost:hover { background-color: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); }
+    .btn-danger {
+      background: rgba(239,68,68,.12);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,.3);
+      transition: background-color .3s ease;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,.2); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .badge-ok { background: rgba(16,185,129,.15); color: #34d399; }
+    .badge-warn { background: rgba(234,179,8,.15); color: #fcd34d; }
+    .copy-btn { color:#94a3b8; transition: color .2s ease; cursor: pointer; }
+    .copy-btn:hover { color: #60a5fa; }
+    .copy-btn.copied { color: #34d399; }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-card {
+      background: #131c33;
+      border: 1px solid #1e2942;
+      border-radius: 20px;
+      max-width: 520px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5);
+    }
+    .warn-banner {
+      background: linear-gradient(180deg, rgba(234,179,8,.10) 0%, rgba(250,204,21,.06) 100%);
+      border: 1px solid rgba(250,204,21,.30);
+      border-radius: 14px;
+      padding: 18px 20px;
+      color: #fcd34d;
+    }
+    .success-banner {
+      background: linear-gradient(180deg, rgba(16,185,129,.12) 0%, rgba(52,211,153,.08) 100%);
+      border: 1px solid rgba(52,211,153,.35);
+      border-radius: 14px;
+      padding: 18px 20px;
+      color: #6ee7b7;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #3b82f6;
+      border-top-color: transparent;
+      border-radius: 9999px;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[16px] tracking-tight text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span id="brandName">Signet</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <span id="nicknameDisplay" class="text-[13px] text-slate-400"></span>
+        <button id="logoutBtn" class="text-[13px] text-slate-400 hover:text-slate-200">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+
+    <!-- License status -->
+    <div id="licenseCard" class="vp-card p-8 mb-8">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <h2 class="text-[18px] font-semibold text-slate-50">License status</h2>
+        <span id="licenseBadge" class="badge badge-warn">Loading…</span>
+      </div>
+      <div id="licenseInfo" class="text-[14px] text-slate-400">
+        Checking your license status…
+      </div>
+      <div id="bindPrompt" class="hidden mt-5">
+        <a href="/bind.html" class="btn-primary inline-block px-5 py-2.5 rounded-xl font-semibold text-[14px]">
+          Bind an order
+        </a>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="vp-card p-8">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h2 class="text-[18px] font-semibold text-slate-50">My products</h2>
+          <p class="text-[13px] text-slate-500 mt-1">
+            Each product gets its own unique ID and license file.
+          </p>
+        </div>
+        <button id="createProductBtn" class="btn-primary px-4 py-2 rounded-xl font-semibold text-[14px]">
+          Create product
+        </button>
+      </div>
+
+      <div id="productList" class="space-y-3">
+        <div class="text-center py-8">
+          <span class="spinner"></span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-8 bg-[#0b1020] mt-12">
+    <div class="max-w-6xl mx-auto px-6 text-center text-[12px] text-slate-500">
+      <p>
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+        <a href="/" class="hover:text-slate-300">Home</a>
+        <span class="mx-2 text-slate-700">·</span>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-slate-300">Docs</a>
+        <span class="mx-2 text-slate-700">·</span>
+        <a href="/verify.html" class="hover:text-slate-300">Public lookup</a>
+      </p>
+      <p class="mt-2">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300">
+          Signet
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Create product modal -->
+  <div id="createModal" class="hidden modal-mask">
+    <div class="modal-card">
+      <h3 class="text-[18px] font-semibold text-slate-50 mb-5">Create product</h3>
+      <label for="createNameInput" class="block text-[13px] font-medium text-slate-300 mb-2">
+        Product name
+      </label>
+      <input
+        id="createNameInput"
+        type="text"
+        maxlength="64"
+        class="input-field w-full px-4 py-3 rounded-xl text-[14px] mb-5"
+        placeholder="e.g. My Game — Chapter 1"
+      />
+      <p id="createError" class="hidden text-[13px] text-red-400 mb-3"></p>
+      <div class="flex gap-3 justify-end">
+        <button id="cancelCreateBtn" class="btn-ghost px-4 py-2 rounded-xl text-[14px]">Cancel</button>
+        <button id="confirmCreateBtn" class="btn-primary px-4 py-2 rounded-xl font-semibold text-[14px]">
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit product modal -->
+  <div id="editModal" class="hidden modal-mask">
+    <div class="modal-card">
+      <h3 class="text-[18px] font-semibold text-slate-50 mb-5">Rename product</h3>
+      <label for="editNameInput" class="block text-[13px] font-medium text-slate-300 mb-2">
+        New name
+      </label>
+      <input
+        id="editNameInput"
+        type="text"
+        maxlength="64"
+        class="input-field w-full px-4 py-3 rounded-xl text-[14px] mb-5"
+      />
+      <p id="editError" class="hidden text-[13px] text-red-400 mb-3"></p>
+      <div class="flex gap-3 justify-end">
+        <button id="cancelEditBtn" class="btn-ghost px-4 py-2 rounded-xl text-[14px]">Cancel</button>
+        <button id="confirmEditBtn" class="btn-primary px-4 py-2 rounded-xl font-semibold text-[14px]">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete product modal -->
+  <div id="deleteModal" class="hidden modal-mask">
+    <div class="modal-card">
+      <h3 class="text-[18px] font-semibold text-red-400 mb-3">Delete product?</h3>
+      <p class="text-[14px] text-slate-400 mb-5 leading-relaxed">
+        This will permanently delete this product and all licenses issued for it.
+        Previously generated license files will stop validating against the public lookup.
+        This action cannot be undone.
+      </p>
+      <p id="deleteTargetName" class="text-[14px] text-slate-200 font-medium mb-5"></p>
+      <div class="flex gap-3 justify-end">
+        <button id="cancelDeleteBtn" class="btn-ghost px-4 py-2 rounded-xl text-[14px]">Cancel</button>
+        <button id="confirmDeleteBtn" class="btn-danger px-4 py-2 rounded-xl font-semibold text-[14px]">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/auth.js"></script>
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+
+      document.title = 'Dashboard — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setHref('footerDocs', cfg.docsUrl);
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // Auth guard
+    // ============================================================
+    AuthAPI.requireAuth();
+    const currentUser = AuthAPI.getUser();
+    if (currentUser) {
+      document.getElementById('nicknameDisplay').textContent = currentUser.nickname || '';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      AuthAPI.logout();
+      location.href = '/login.html';
+    });
+
+    // ============================================================
+    // Refs
+    // ============================================================
+    const licenseBadge = document.getElementById('licenseBadge');
+    const licenseInfo = document.getElementById('licenseInfo');
+    const bindPrompt = document.getElementById('bindPrompt');
+    const productListEl = document.getElementById('productList');
+
+    const createModal = document.getElementById('createModal');
+    const editModal = document.getElementById('editModal');
+    const deleteModal = document.getElementById('deleteModal');
+
+    let editingProductId = null;
+    let deletingProductId = null;
+    let deletingProductName = '';
+
+    // ============================================================
+    // Utilities
+    // ============================================================
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({
+        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+    function escapeAttr(s) {
+      return String(s ?? '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+    }
+    function formatDate(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+    }
+
+    // ============================================================
+    // License status
+    // ============================================================
+    async function loadLicense() {
+      try {
+        const res = await AuthAPI.getLicenseStatus();
+        if (res.active) {
+          licenseBadge.textContent = 'Active';
+          licenseBadge.className = 'badge badge-ok';
+          licenseInfo.textContent =
+            `Type: ${res.type || 'Pro'} · Provider: ${res.provider || '—'}` +
+            (res.issued_at_text ? ` · Bound: ${res.issued_at_text}` : '');
+          bindPrompt.classList.add('hidden');
+        } else {
+          licenseBadge.textContent = 'Not active';
+          licenseBadge.className = 'badge badge-warn';
+          licenseInfo.textContent =
+            'You have not bound an order yet. Bind one to unlock product creation.';
+          bindPrompt.classList.remove('hidden');
+        }
+      } catch (e) {
+        licenseBadge.textContent = 'Error';
+        licenseBadge.className = 'badge badge-warn';
+        licenseInfo.textContent = 'Failed to load license status: ' + (e.message || 'unknown error');
+      }
+    }
+
+    // ============================================================
+    // Products list
+    // ============================================================
+    async function loadProducts() {
+      productListEl.innerHTML = '<div class="text-center py-8"><span class="spinner"></span></div>';
+
+      let list;
+      try {
+        list = await AuthAPI.listProducts();
+      } catch (e) {
+        productListEl.innerHTML =
+          '<p class="text-[14px] text-red-400 text-center py-6">' +
+          'Failed to load products: ' + escapeHtml(e.message || '') + '</p>';
+        return;
+      }
+
+      if (!list || list.length === 0) {
+        productListEl.innerHTML = `
+          <div class="text-center py-10">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="1.6" class="mx-auto mb-3">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            <p class="text-[14px] text-slate-500">
+              You haven't created any products yet.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      productListEl.innerHTML = list.map(p => `
+        <div class="product-row p-5">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1 min-w-0">
+              <div class="text-[16px] font-medium text-slate-100 truncate">
+                ${escapeHtml(p.name)}
+              </div>
+              <div class="mt-2 flex items-center gap-2 flex-wrap">
+                <span class="text-[12px] text-slate-500">Product ID</span>
+                <code class="text-[12.5px] font-mono text-slate-300 bg-[#131c33] px-2 py-0.5 rounded">
+                  ${escapeHtml(p.product_uid)}
+                </code>
+                <button
+                  class="copy-btn"
+                  title="Copy product ID"
+                  onclick="copyUid('${escapeAttr(p.product_uid)}', this)"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                  </svg>
+                </button>
+                <span class="text-[11.5px] text-slate-600 ml-1">Created ${formatDate(p.created_at)}</span>
+              </div>
+            </div>
+            <div class="flex gap-2 flex-shrink-0 flex-wrap">
+              <button
+                class="btn-ghost px-3 py-1.5 rounded-lg text-[13px]"
+                onclick="editProduct('${p.id}', '${escapeAttr(p.name)}')"
+              >
+                Rename
+              </button>
+              <button
+                class="btn-danger px-3 py-1.5 rounded-lg text-[13px]"
+                onclick="openDelete('${p.id}', '${escapeAttr(p.name)}')"
+              >
+                Delete
+              </button>
+              <button
+                class="btn-primary px-3 py-1.5 rounded-lg text-[13px] font-semibold"
+                onclick="downloadLicense('${p.id}', '${escapeAttr(p.product_uid)}')"
+              >
+                Download license
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ============================================================
+    // Copy product UID
+    // ============================================================
+    function copyUid(uid, btn) {
+      const original = btn.innerHTML;
+      const done = () => {
+        btn.classList.add('copied');
+        btn.innerHTML =
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">' +
+          '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = original;
+        }, 1200);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(uid).then(done).catch(() => alert('Copy failed'));
+      } else {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = uid;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); }
+        catch { alert('Copy failed'); }
+        document.body.removeChild(ta);
+      }
+    }
+    window.copyUid = copyUid;
+
+    // ============================================================
+    // Create product
+    // ============================================================
+    document.getElementById('createProductBtn').addEventListener('click', () => {
+      document.getElementById('createNameInput').value = '';
+      document.getElementById('createError').classList.add('hidden');
+      createModal.classList.remove('hidden');
+      setTimeout(() => document.getElementById('createNameInput').focus(), 100);
+    });
+
+    document.getElementById('cancelCreateBtn').addEventListener('click', () => {
+      createModal.classList.add('hidden');
+    });
+
+    document.getElementById('confirmCreateBtn').addEventListener('click', async () => {
+      const input = document.getElementById('createNameInput');
+      const err = document.getElementById('createError');
+      const name = input.value.trim();
+      err.classList.add('hidden');
+
+      if (!name) {
+        err.textContent = 'Please enter a product name';
+        err.classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('confirmCreateBtn');
+      btn.disabled = true;
+      btn.textContent = 'Creating…';
+
+      try {
+        await AuthAPI.createProduct(name);
+        createModal.classList.add('hidden');
+        await loadProducts();
+      } catch (e) {
+        err.textContent = e.message || 'Failed to create product';
+        err.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create';
+      }
+    });
+
+    // Enter key submits
+    document.getElementById('createNameInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('confirmCreateBtn').click();
+    });
+
+    // ============================================================
+    // Edit product
+    // ============================================================
+    function editProduct(id, currentName) {
+      editingProductId = id;
+      document.getElementById('editNameInput').value = currentName;
+      document.getElementById('editError').classList.add('hidden');
+      editModal.classList.remove('hidden');
+      setTimeout(() => document.getElementById('editNameInput').focus(), 100);
+    }
+    window.editProduct = editProduct;
+
+    document.getElementById('cancelEditBtn').addEventListener('click', () => {
+      editModal.classList.add('hidden');
+      editingProductId = null;
+    });
+
+    document.getElementById('confirmEditBtn').addEventListener('click', async () => {
+      if (!editingProductId) return;
+
+      const input = document.getElementById('editNameInput');
+      const err = document.getElementById('editError');
+      const name = input.value.trim();
+      err.classList.add('hidden');
+
+      if (!name) {
+        err.textContent = 'Please enter a product name';
+        err.classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('confirmEditBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      try {
+        await AuthAPI.updateProduct(editingProductId, name);
+        editModal.classList.add('hidden');
+        editingProductId = null;
+        await loadProducts();
+      } catch (e) {
+        err.textContent = e.message || 'Failed to save';
+        err.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save';
+      }
+    });
+
+    document.getElementById('editNameInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('confirmEditBtn').click();
+    });
+
+    // ============================================================
+    // Delete product
+    // ============================================================
+    function openDelete(id, name) {
+      deletingProductId = id;
+      deletingProductName = name;
+      document.getElementById('deleteTargetName').textContent = name;
+      deleteModal.classList.remove('hidden');
+    }
+    window.openDelete = openDelete;
+
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+      deleteModal.classList.add('hidden');
+      deletingProductId = null;
+    });
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+      if (!deletingProductId) return;
+
+      const btn = document.getElementById('confirmDeleteBtn');
+      btn.disabled = true;
+      btn.textContent = 'Deleting…';
+
+      try {
+        await AuthAPI.deleteProduct(deletingProductId);
+        deleteModal.classList.add('hidden');
+        deletingProductId = null;
+        await loadProducts();
+      } catch (e) {
+        alert(e.message || 'Failed to delete product');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Delete';
+      }
+    });
+
+    // ============================================================
+    // Download license
+    // ============================================================
+    async function downloadLicense(productId, productUid) {
+      try {
+        const license = await AuthAPI.generateLicense(productId);
+
+        const blob = new Blob(
+          [JSON.stringify(license, null, 2)],
+          { type: 'application/json' }
+        );
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `license-${productUid}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        alert(e.message || 'Failed to generate license');
+      }
+    }
+    window.downloadLicense = downloadLicense;
+
+    // ============================================================
+    // Close modals with Escape
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      createModal.classList.add('hidden');
+      editModal.classList.add('hidden');
+      deleteModal.classList.add('hidden');
+    });
+
+    // Close modal when clicking the mask (not the card)
+    [createModal, editModal, deleteModal].forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+      });
+    });
+
+    // ============================================================
+    // Init
+    // ============================================================
+    (async function init() {
+      await Promise.all([loadLicense(), loadProducts()]);
+    })();
+  </script>
+</body>
+</html>

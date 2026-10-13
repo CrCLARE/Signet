@@ -1,0 +1,915 @@
+ <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Signet</title>
+  <meta name="robots" content="noindex" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: { 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    window.SIGNET_CONFIG = {
+      apiBase: 'https://api.example.com',
+      brandName: 'Signet',
+      repoUrl: 'https://github.com/CrCLARE/Signet',
+      docsUrl: 'https://dev.crclare.top'
+    };
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { background-color: #0b1020; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b1020;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(180deg, rgba(11,16,32,.98) 0%, rgba(30,41,59,.92) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar .logo-mark {
+      background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,.55);
+    }
+    .vp-card {
+      background-color: #131c33;
+      border: 1px solid #1e2942;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      border-radius: 22px;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);
+      color: #fff;
+      box-shadow: 0 10px 24px -10px rgba(37,99,235,.55);
+      transition: transform .2s ease, filter .3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-ghost {
+      background: rgba(255,255,255,.06);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,.18);
+      transition: background-color .3s ease;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.12); }
+    .btn-danger {
+      background: rgba(239,68,68,.12);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,.3);
+      transition: background-color .3s ease;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,.2); }
+    .btn-success {
+      background: rgba(16,185,129,.12);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,.3);
+      transition: background-color .3s ease;
+    }
+    .btn-success:hover { background: rgba(16,185,129,.2); }
+    .input-field {
+      background: #0b1020;
+      border: 1px solid #1e2942;
+      color: #e5e7eb;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.2);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      font-size: 13.5px;
+      vertical-align: top;
+    }
+    th {
+      background: rgba(59,130,246,.08);
+      font-weight: 600;
+      color: #e2e8f0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+    tr:hover td { background: rgba(59,130,246,.04); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .badge-ok { background: rgba(16,185,129,.15); color: #34d399; }
+    .badge-banned { background: rgba(239,68,68,.15); color: #f87171; }
+    .badge-manual { background: rgba(234,179,8,.15); color: #fcd34d; }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-card {
+      background: #131c33;
+      border: 1px solid #1e2942;
+      border-radius: 20px;
+      max-width: 540px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5);
+    }
+    .copy-btn { color: #64748b; transition: color .2s ease; cursor: pointer; }
+    .copy-btn:hover { color: #60a5fa; }
+    .copy-btn.copied { color: #34d399; }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topbar sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-2 font-extrabold text-[16px] text-white">
+        <span class="logo-mark w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <span><span id="brandName">Signet</span> · Admin</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <span id="adminNameDisplay" class="text-[13px] text-slate-400"></span>
+        <button id="logoutBtn" class="text-[13px] text-slate-400 hover:text-slate-200">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8" id="mainContent" style="display:none;">
+
+    <!-- Stats -->
+    <div id="statsRow" class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-8"></div>
+
+    <!-- Licenses -->
+    <div class="vp-card p-6 mb-8">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <h2 class="text-[18px] font-semibold text-slate-50">Licenses</h2>
+        <div class="flex flex-wrap gap-2">
+          <input id="searchInput" type="text" class="input-field px-4 py-2 rounded-xl text-[13.5px] w-72"
+                 placeholder="Product / UID / email / User ID / note" />
+          <select id="bannedFilter" class="input-field px-3 py-2 rounded-xl text-[13.5px]">
+            <option value="">All</option>
+            <option value="false">Active only</option>
+            <option value="true">Banned only</option>
+          </select>
+          <button id="searchBtn" class="btn-primary px-4 py-2 rounded-xl text-[13.5px] font-semibold">Search</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Product ID</th>
+              <th>User</th>
+              <th>User ID</th>
+              <th>Issued</th>
+              <th>Note / Ban reason</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="licenseTable"></tbody>
+        </table>
+      </div>
+
+      <div id="pagination" class="mt-5 flex justify-center gap-2 text-[13px]"></div>
+    </div>
+
+    <!-- Grant Pro -->
+    <div class="vp-card p-6 mb-8">
+      <h2 class="text-[18px] font-semibold text-slate-50 mb-2">
+        Grant Pro access
+      </h2>
+      <p class="text-[12.5px] text-slate-500 mb-4">
+        Grants Pro access to any user by inserting a virtual paid order.
+        Equivalent to the user binding a real order — they can then create products and download licenses.
+      </p>
+      <div class="flex flex-wrap gap-3 items-end">
+        <div>
+          <label class="block text-[12px] text-slate-400 mb-1.5">User ID or email</label>
+          <input id="grantTarget" type="text"
+                 class="input-field px-4 py-2 rounded-xl text-[13.5px] w-80"
+                 placeholder="user_id or user@example.com" />
+        </div>
+        <div>
+          <label class="block text-[12px] text-slate-400 mb-1.5">Note (optional)</label>
+          <input id="grantNote" type="text"
+                 class="input-field px-4 py-2 rounded-xl text-[13.5px] w-72"
+                 placeholder="e.g. giveaway 2026-10-15" />
+        </div>
+        <button id="grantBtn" class="btn-primary px-4 py-2 rounded-xl text-[13.5px] font-semibold">Grant Pro</button>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div class="vp-card p-6 mb-8">
+      <h2 class="text-[18px] font-semibold text-slate-50 mb-4">Users</h2>
+      <div class="flex flex-wrap gap-3 items-center mb-5">
+        <input id="userSearchInput" type="text"
+               class="input-field px-4 py-2 rounded-xl text-[13.5px] w-80"
+               placeholder="Search email / nickname / User ID" />
+        <button id="userSearchBtn" class="btn-primary px-4 py-2 rounded-xl text-[13.5px] font-semibold">Search</button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Nickname</th>
+              <th>Email</th>
+              <th>User ID</th>
+              <th>Joined</th>
+              <th>Order</th>
+              <th>Products</th>
+              <th>Licenses</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Audit -->
+    <div class="vp-card p-6">
+      <h2 class="text-[18px] font-semibold text-slate-50 mb-4">Audit log</h2>
+      <div id="auditList" class="space-y-2 text-[13px]"></div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-6 bg-[#0b1020] mt-12">
+    <div class="max-w-7xl mx-auto px-6 text-center text-[12px] text-slate-500">
+      <p>
+        <span id="footerBrand">Signet</span>
+        © <span id="copyrightYear"></span>
+        <a href="/" class="hover:text-slate-300">Home</a>
+        <span class="mx-2 text-slate-700">·</span>
+        <a id="footerDocs" href="#" target="_blank" class="hover:text-slate-300">Docs</a>
+      </p>
+      <p class="mt-2">
+        Powered by
+        <a href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300">
+          Signet
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Login modal -->
+  <div id="adminLoginModal" class="modal-mask" style="z-index:100;">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="w-9 h-9 rounded-xl flex items-center justify-center"
+              style="background: linear-gradient(135deg,#60a5fa 0%,#2563eb 100%);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7v6c0 5 4 9 8 10 4-1 8-5 8-10V7l-8-5z" fill="white"/>
+          </svg>
+        </span>
+        <div>
+          <h3 class="text-[18px] font-bold text-white leading-tight">Admin panel</h3>
+          <p class="text-[12px] text-slate-400">Administrator sign in</p>
+        </div>
+      </div>
+
+      <label class="block text-[12px] text-slate-400 mb-1.5">Username</label>
+      <input id="adminUsername" type="text" autocomplete="username"
+             class="input-field w-full px-4 py-2.5 rounded-xl text-[13.5px] mb-4" />
+
+      <label class="block text-[12px] text-slate-400 mb-1.5">Password</label>
+      <input id="adminPassword" type="password" autocomplete="current-password"
+             class="input-field w-full px-4 py-2.5 rounded-xl text-[13.5px] mb-4" />
+
+      <p id="adminLoginErr" class="hidden text-[12.5px] text-red-400 mb-3"></p>
+
+      <button id="adminLoginBtn" class="btn-primary w-full py-2.5 rounded-xl font-semibold text-[14px]">
+        Sign in
+      </button>
+      <p class="mt-4 text-[11.5px] text-slate-500 text-center">
+        Admin credentials are independent from user accounts.
+      </p>
+    </div>
+  </div>
+
+  <!-- Ban modal -->
+  <div id="banModal" class="hidden modal-mask">
+    <div class="modal-card">
+      <h3 class="text-[18px] font-semibold text-red-400 mb-3">Ban license</h3>
+      <p class="text-[13.5px] text-slate-300 mb-4" id="banTarget"></p>
+
+      <label class="block text-[12px] text-slate-400 mb-1.5">Type the product name to confirm</label>
+      <input id="banConfirmInput" type="text"
+             class="input-field w-full px-4 py-2.5 rounded-xl text-[13.5px] mb-4"
+             placeholder="Must match exactly" />
+
+      <label class="block text-[12px] text-slate-400 mb-1.5">
+        Reason (required — will be shown on the public lookup page)
+      </label>
+      <input id="banReasonInput" type="text"
+             class="input-field w-full px-4 py-2.5 rounded-xl text-[13.5px] mb-5"
+             placeholder="e.g. license file leaked publicly" />
+
+      <div class="flex gap-3 justify-end">
+        <button id="banCancel" class="btn-ghost px-4 py-2 rounded-xl text-[13.5px]">Cancel</button>
+        <button id="banConfirm" class="btn-danger px-4 py-2 rounded-xl text-[13.5px] font-semibold">Confirm ban</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset password modal -->
+  <div id="resetPwdModal" class="hidden modal-mask">
+    <div class="modal-card">
+      <h3 class="text-[18px] font-semibold text-red-400 mb-3">Reset user password</h3>
+      <p class="text-[13.5px] text-slate-300 mb-1" id="resetPwdTarget"></p>
+      <p class="text-[12.5px] text-slate-500 mb-5">
+        The user will need to use the new password on their next sign in. Please relay it to them.
+      </p>
+      <label class="block text-[12px] text-slate-400 mb-1.5">New password (min 8 characters)</label>
+      <input id="resetNewPwd" type="text"
+             class="input-field w-full px-4 py-2.5 rounded-xl text-[13.5px] mb-5"
+             placeholder="Shown as plaintext for easy copy" />
+      <div class="flex gap-3 justify-end">
+        <button id="resetPwdCancel" class="btn-ghost px-4 py-2 rounded-xl text-[13.5px]">Cancel</button>
+        <button id="resetPwdConfirm" class="btn-danger px-4 py-2 rounded-xl text-[13.5px] font-semibold">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/auth.js"></script>
+  <script>
+    // ============================================================
+    // Apply runtime config
+    // ============================================================
+    (function () {
+      const cfg = window.SIGNET_CONFIG || {};
+      const brandName = cfg.brandName || 'Signet';
+
+      document.title = 'Admin — ' + brandName;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+      const setHref = (id, url) => {
+        const el = document.getElementById(id);
+        if (el && url) el.href = url;
+      };
+
+      setText('brandName', brandName);
+      setText('footerBrand', brandName);
+      setHref('footerDocs', cfg.docsUrl);
+    })();
+
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
+    // ============================================================
+    // State
+    // ============================================================
+    let currentPage = 1;
+    let currentQuery = '';
+    let currentBanned = '';
+    let banTargetLicense = null;
+    let resetTargetUser = null;
+
+    // ============================================================
+    // Utilities
+    // ============================================================
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, m => ({
+        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+    function escapeAttr(s) {
+      return String(s ?? '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+    }
+    function formatTime(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      const p = n => String(n).padStart(2, '0');
+      return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+    }
+    function copyText(text, btn) {
+      const original = btn.innerHTML;
+      const done = () => {
+        btn.classList.add('copied');
+        btn.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">' +
+          '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = original;
+        }, 1200);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => alert('Copy failed'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); }
+        catch { alert('Copy failed'); }
+        document.body.removeChild(ta);
+      }
+    }
+    window.copyText = copyText;
+
+    // ============================================================
+    // Login / logout
+    // ============================================================
+    function showLoginModal() {
+      document.getElementById('adminLoginModal').classList.remove('hidden');
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('adminNameDisplay').textContent = '';
+    }
+
+    function showMainContent(username) {
+      document.getElementById('adminLoginModal').classList.add('hidden');
+      document.getElementById('mainContent').style.display = 'block';
+      document.getElementById('adminNameDisplay').textContent = username || 'admin';
+    }
+
+    async function doLogin() {
+      const u = document.getElementById('adminUsername').value.trim();
+      const p = document.getElementById('adminPassword').value;
+      const err = document.getElementById('adminLoginErr');
+      const btn = document.getElementById('adminLoginBtn');
+
+      err.classList.add('hidden');
+      if (!u || !p) {
+        err.textContent = 'Please fill in both fields';
+        err.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+
+      try {
+        await AdminAPI.login(u, p);
+        showMainContent(u);
+        document.getElementById('adminPassword').value = '';
+        await refreshAll();
+      } catch (e) {
+        err.textContent = e.message || 'Sign in failed';
+        err.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    }
+
+    document.getElementById('adminLoginBtn').onclick = doLogin;
+    document.getElementById('adminPassword').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+    document.getElementById('adminUsername').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('adminPassword').focus();
+    });
+
+    document.getElementById('logoutBtn').onclick = () => {
+      AdminAPI.logout();
+      location.reload();
+    };
+
+    // ============================================================
+    // Init
+    // ============================================================
+    if (AdminAPI.isAuthenticated()) {
+      showMainContent('admin');
+      refreshAll().catch(() => {
+        AdminAPI.clearToken();
+        showLoginModal();
+      });
+    } else {
+      showLoginModal();
+    }
+
+    // ============================================================
+    // Data loading
+    // ============================================================
+    async function refreshAll() {
+      await Promise.all([loadStats(), loadLicenses(), loadUsers(), loadAudit()]);
+    }
+
+    async function loadStats() {
+      const s = await AdminAPI.stats();
+      const cards = [
+        { label: 'Licenses',  value: s.licenses, color: 'text-brand-400' },
+        { label: 'Banned',    value: s.banned,   color: 'text-red-400' },
+        { label: 'Manual',    value: s.manual,   color: 'text-amber-400' },
+        { label: 'Users',     value: s.users,    color: 'text-emerald-400' },
+        { label: 'Products',  value: s.products, color: 'text-slate-300' },
+        { label: 'Paid orders', value: s.orders, color: 'text-purple-400' }
+      ];
+      document.getElementById('statsRow').innerHTML = cards.map(c => `
+        <div class="vp-card p-5">
+          <div class="text-[12px] text-slate-500 mb-1">${c.label}</div>
+          <div class="text-[24px] font-bold ${c.color}">${c.value}</div>
+        </div>
+      `).join('');
+    }
+
+    async function loadLicenses() {
+      const params = new URLSearchParams({ page: currentPage });
+      if (currentQuery)  params.set('q', currentQuery);
+      if (currentBanned) params.set('banned', currentBanned);
+
+      const data = await AdminAPI.listLicenses(params);
+      const tbody = document.getElementById('licenseTable');
+
+      if (!data.rows.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-500 py-8">No data</td></tr>';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      tbody.innerHTML = data.rows.map(r => {
+        const badge = r.banned
+          ? '<span class="badge badge-banned">Banned</span>'
+          : '<span class="badge badge-ok">Active</span>';
+        const manual = r.manual ? '<span class="badge badge-manual">Manual</span>' : '';
+
+        const noteHtml = r.note
+          ? `<div class="text-[12px] text-slate-400 max-w-[240px] truncate" title="${escapeAttr(r.note)}">${escapeHtml(r.note)}</div>`
+          : '';
+        const banHtml = r.banned && r.ban_reason
+          ? `<div class="text-[12px] text-red-300 max-w-[240px] truncate mt-0.5" title="${escapeAttr(r.ban_reason)}">Reason: ${escapeHtml(r.ban_reason)}</div>`
+          : '';
+
+        const uid = r.user_id || '—';
+        const uidHtml = `
+          <div class="flex items-center gap-1.5">
+            <span class="font-mono text-[11.5px] text-slate-400 max-w-[150px] truncate" title="${escapeAttr(uid)}">${escapeHtml(uid)}</span>
+            <button class="copy-btn" onclick="copyText('${escapeAttr(uid)}', this)" title="Copy User ID">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+            </button>
+          </div>
+        `;
+
+        return `
+          <tr>
+            <td class="text-slate-100">${escapeHtml(r.product_name || '(deleted)')}</td>
+            <td class="font-mono text-[12px] text-slate-400">${escapeHtml(r.product_uid || '—')}</td>
+            <td>
+              <div class="text-slate-200">${escapeHtml(r.user_nickname)}</div>
+              <div class="text-[11.5px] text-slate-500">${escapeHtml(r.user_email)}</div>
+            </td>
+            <td>${uidHtml}</td>
+            <td class="text-slate-400 whitespace-nowrap">${formatTime(r.issued_at)}</td>
+            <td class="max-w-[260px]">${noteHtml}${banHtml}</td>
+            <td class="whitespace-nowrap">${badge} ${manual}</td>
+            <td>
+              <div class="flex gap-2 flex-wrap">
+                ${r.banned
+                  ? `<button class="btn-success px-3 py-1 rounded-lg text-[12px]" onclick="unbanLicense('${r.license_id}')">Unban</button>`
+                  : `<button class="btn-danger px-3 py-1 rounded-lg text-[12px]" onclick="openBanModal('${r.license_id}', '${escapeAttr(r.product_name || '')}')">Ban</button>`}
+                <button class="btn-ghost px-3 py-1 rounded-lg text-[12px]" onclick="editNote('${r.license_id}', '${escapeAttr(r.note || '')}')">Note</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const totalPages = Math.ceil(data.total / data.per_page) || 1;
+      const pag = [];
+      for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        pag.push(`<button class="${i === currentPage ? 'btn-primary' : 'btn-ghost'} px-3 py-1 rounded-lg" onclick="gotoPage(${i})">${i}</button>`);
+      }
+      document.getElementById('pagination').innerHTML = pag.join('');
+    }
+
+    async function loadUsers() {
+      const q = document.getElementById('userSearchInput').value.trim();
+      const list = await AdminAPI.listUsers(q);
+      const tbody = document.getElementById('userTable');
+
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-500 py-8">No users found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(u => {
+        const uidHtml = `
+          <div class="flex items-center gap-1.5">
+            <span class="font-mono text-[11.5px] text-slate-400 max-w-[150px] truncate" title="${escapeAttr(u.id)}">${escapeHtml(u.id)}</span>
+            <button class="copy-btn" onclick="copyText('${escapeAttr(u.id)}', this)" title="Copy User ID">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+              </svg>
+            </button>
+          </div>
+        `;
+
+        return `
+          <tr>
+            <td class="text-slate-100">${escapeHtml(u.nickname)}</td>
+            <td class="text-slate-400">${escapeHtml(u.email)}</td>
+            <td>${uidHtml}</td>
+            <td class="text-slate-400 whitespace-nowrap">${formatTime(u.created_at)}</td>
+            <td>${u.has_order > 0 ? '<span class="badge badge-ok">Bound</span>' : '<span class="text-slate-500">—</span>'}</td>
+            <td class="text-slate-400">${u.product_count}</td>
+            <td class="text-slate-400">${u.license_count}</td>
+            <td>
+              <div class="flex gap-2 flex-wrap">
+                <button class="btn-primary px-3 py-1 rounded-lg text-[12px] font-semibold"
+                        onclick="quickGrant('${escapeAttr(u.id)}', '${escapeAttr(u.email)}')">
+                  Grant Pro
+                </button>
+                <button class="btn-danger px-3 py-1 rounded-lg text-[12px]"
+                        onclick="openResetPwd('${u.id}', '${escapeAttr(u.email)}', '${escapeAttr(u.nickname)}')">
+                  Reset password
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadAudit() {
+      const list = await AdminAPI.audit();
+      const container = document.getElementById('auditList');
+
+      if (!list.length) {
+        container.innerHTML = '<p class="text-slate-500">No activity yet.</p>';
+        return;
+      }
+
+      const actionLabel = {
+        ban_license: 'Banned license',
+        unban_license: 'Unbanned license',
+        update_license_note: 'Updated note',
+        grant_pro: 'Granted Pro',
+        admin_reset_password: 'Reset password'
+      };
+
+      container.innerHTML = list.slice(0, 50).map(a => {
+        let detailHtml = '';
+        try {
+          const d = JSON.parse(a.detail || '{}');
+          if (a.action === 'ban_license' && d.reason) {
+            detailHtml = `<span class="text-slate-500 text-[12px] ml-3">Reason: ${escapeHtml(d.reason)}</span>`;
+          } else if (a.action === 'admin_reset_password' && d.email) {
+            detailHtml = `<span class="text-slate-500 text-[12px] ml-3">Target: ${escapeHtml(d.email)}</span>`;
+          } else if (a.action === 'grant_pro' && d.user_email) {
+            detailHtml = `<span class="text-slate-500 text-[12px] ml-3">Target: ${escapeHtml(d.user_email)}${d.note ? ' · ' + escapeHtml(d.note) : ''}</span>`;
+          }
+        } catch (e) {}
+
+        return `
+          <div class="flex items-center justify-between py-2 border-b border-white/5 last:border-0 flex-wrap gap-2">
+            <div>
+              <span class="text-brand-400 font-medium">${escapeHtml(a.admin_id)}</span>
+              <span class="text-slate-300 ml-2">${actionLabel[a.action] || a.action}</span>
+              ${detailHtml}
+            </div>
+            <div class="text-slate-500 text-[12px]">${formatTime(a.created_at)} UTC</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ============================================================
+    // Search / pagination
+    // ============================================================
+    document.getElementById('searchBtn').onclick = () => {
+      currentQuery = document.getElementById('searchInput').value.trim();
+      currentBanned = document.getElementById('bannedFilter').value;
+      currentPage = 1;
+      loadLicenses();
+    };
+
+    document.getElementById('userSearchBtn').onclick = () => {
+      loadUsers();
+    };
+
+    document.getElementById('userSearchInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') loadUsers();
+    });
+
+    function gotoPage(p) {
+      currentPage = p;
+      loadLicenses();
+    }
+    window.gotoPage = gotoPage;
+
+    // ============================================================
+    // Ban / unban
+    // ============================================================
+    function openBanModal(licenseId, productName) {
+      banTargetLicense = { licenseId, productName };
+      document.getElementById('banTarget').textContent = `Product: ${productName}`;
+      document.getElementById('banConfirmInput').value = '';
+      document.getElementById('banReasonInput').value = '';
+      document.getElementById('banModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('banConfirmInput').focus(), 100);
+    }
+    window.openBanModal = openBanModal;
+
+    document.getElementById('banCancel').onclick = () => {
+      document.getElementById('banModal').classList.add('hidden');
+      banTargetLicense = null;
+    };
+
+    document.getElementById('banConfirm').onclick = async () => {
+      if (!banTargetLicense) return;
+      const input = document.getElementById('banConfirmInput').value.trim();
+      const reason = document.getElementById('banReasonInput').value.trim();
+
+      if (input !== banTargetLicense.productName) {
+        alert('Product name does not match. Action cancelled.');
+        return;
+      }
+      if (!reason) {
+        alert('A reason is required.');
+        return;
+      }
+
+      try {
+        await AdminAPI.ban({
+          license_id: banTargetLicense.licenseId,
+          reason
+        });
+        document.getElementById('banModal').classList.add('hidden');
+        banTargetLicense = null;
+        await refreshAll();
+      } catch (e) {
+        alert('Ban failed: ' + (e.message || 'unknown error'));
+      }
+    };
+
+    async function unbanLicense(licenseId) {
+      const reason = prompt('Unban reason (optional):') || '';
+      try {
+        await AdminAPI.unban({ license_id: licenseId, reason });
+        await refreshAll();
+      } catch (e) {
+        alert('Unban failed: ' + (e.message || 'unknown error'));
+      }
+    }
+    window.unbanLicense = unbanLicense;
+
+    // ============================================================
+    // Edit note
+    // ============================================================
+    async function editNote(licenseId, currentNote) {
+      const note = prompt('New note:', currentNote);
+      if (note === null) return;
+      try {
+        await AdminAPI.updateLicense(licenseId, { note });
+        await refreshAll();
+      } catch (e) {
+        alert('Update failed: ' + (e.message || 'unknown error'));
+      }
+    }
+    window.editNote = editNote;
+
+    // ============================================================
+    // Grant Pro
+    // ============================================================
+    document.getElementById('grantBtn').onclick = async () => {
+      const target = document.getElementById('grantTarget').value.trim();
+      const note = document.getElementById('grantNote').value.trim();
+      if (!target) return alert('Enter a user ID or email');
+
+      if (!confirm(`Grant Pro access to "${target}"?`)) return;
+
+      try {
+        const r = await AdminAPI.grantPro({ user_id_or_email: target, note });
+        alert(
+          'Pro access granted\n\n' +
+          `User: ${r.nickname} (${r.email})\n` +
+          `User ID: ${r.user_id}\n` +
+          `Virtual order: ${r.virtual_order_no}`
+        );
+        document.getElementById('grantTarget').value = '';
+        document.getElementById('grantNote').value = '';
+        await refreshAll();
+      } catch (e) {
+        alert('Grant failed: ' + (e.message || 'unknown error'));
+      }
+    };
+
+    async function quickGrant(userId, email) {
+      const note = prompt(`Grant Pro to ${email}. Note (optional):`, '') ?? null;
+      if (note === null) return;
+
+      try {
+        const r = await AdminAPI.grantPro({ user_id_or_email: userId, note });
+        alert(
+          'Pro access granted\n\n' +
+          `User: ${r.nickname} (${r.email})\n` +
+          `Virtual order: ${r.virtual_order_no}`
+        );
+        await refreshAll();
+      } catch (e) {
+        alert('Grant failed: ' + (e.message || 'unknown error'));
+      }
+    }
+    window.quickGrant = quickGrant;
+
+    // ============================================================
+    // Reset user password
+    // ============================================================
+    function openResetPwd(userId, email, nickname) {
+      resetTargetUser = { userId, email, nickname };
+      document.getElementById('resetPwdTarget').textContent = `${nickname} · ${email}`;
+      document.getElementById('resetNewPwd').value = '';
+      document.getElementById('resetPwdModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('resetNewPwd').focus(), 100);
+    }
+    window.openResetPwd = openResetPwd;
+
+    document.getElementById('resetPwdCancel').onclick = () => {
+      document.getElementById('resetPwdModal').classList.add('hidden');
+      resetTargetUser = null;
+    };
+
+    document.getElementById('resetPwdConfirm').onclick = async () => {
+      if (!resetTargetUser) return;
+      const newPwd = document.getElementById('resetNewPwd').value.trim();
+      if (newPwd.length < 8) return alert('Password must be at least 8 characters');
+      if (!confirm(`Reset the password for ${resetTargetUser.email}?`)) return;
+
+      try {
+        await AdminAPI.resetPassword({
+          email: resetTargetUser.email,
+          new_password: newPwd
+        });
+        alert(
+          'Password reset.\n\n' +
+          'Relay this password to the user:\n\n' + newPwd
+        );
+        document.getElementById('resetPwdModal').classList.add('hidden');
+        resetTargetUser = null;
+        await loadAudit();
+      } catch (e) {
+        alert('Reset failed: ' + (e.message || 'unknown error'));
+      }
+    };
+
+    // ============================================================
+    // Escape closes modals
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      ['banModal', 'resetPwdModal'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    });
+
+    // ============================================================
+    // Refresh button in top bar (optional)
+    // ============================================================
+    // (kept simple: reload happens via individual actions)
+  </script>
+</body>
+</html>

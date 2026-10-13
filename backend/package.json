@@ -1,0 +1,30 @@
+ {
+  "name": "signet-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Signet - SaaS authorization platform template (Cloudflare Workers backend)",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "CrCLARE Studio",
+  "homepage": "https://github.com/CrCLARE/Signet",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrCLARE/Signet.git",
+    "directory": "backend"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute signet-db --file=./schema.sql --remote",
+    "db:init:local": "wrangler d1 execute signet-db --file=./schema.sql --local",
+    "gen:admin-pwd": "node scripts/gen-admin-pwd.cjs",
+    "gen:keys": "node scripts/gen-keys.cjs",
+    "tail": "wrangler tail"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.1.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.80.0"
+  }
+}

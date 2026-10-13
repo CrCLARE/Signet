@@ -1,0 +1,44 @@
+ # ============================================================
+# Cloudflare Pages response headers
+# File must be in the root of the published directory.
+# Format: <path-pattern>\n  <Header-Name>: <value>\n\n
+# ============================================================
+
+# ------------------------------------------------------------
+# JavaScript: always revalidate so users pick up new versions
+# ------------------------------------------------------------
+/assets/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ------------------------------------------------------------
+# CSS: same treatment
+# ------------------------------------------------------------
+/assets/*.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ------------------------------------------------------------
+# HTML: never cache, always serve the latest
+# ------------------------------------------------------------
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ------------------------------------------------------------
+# Global security headers (applied to every response)
+# ------------------------------------------------------------
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
