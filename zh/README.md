@@ -10,7 +10,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Cloudflare%20Workers-orange)](https://workers.cloudflare.com/)
-[![Status](https://img.shields.io/badge/status-pre--release-yellow)](https://github.com/CrCLARE/Signet)
+[![Status](https://img.shields.io/badge/status-V1.0--release-yellow)](https://github.com/CrCLARE/Signet)
 
 ---
 
