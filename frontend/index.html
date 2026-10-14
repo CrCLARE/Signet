@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -289,7 +289,7 @@
           </a>
         </div>
         <p class="mt-6 text-[13px] text-brand-300/90">
-          Apache 2.0 · Pre-release · Cloudflare Workers + D1
+          Apache 2.0 · v1.0 release · Cloudflare Workers + D1
         </p>
       </div>
     </div>
@@ -448,7 +448,7 @@
       </div>
       <p class="mt-5 text-[12px] text-slate-500">
         Powered by
-        <a id="poweredBy" href="#" target="_blank" class="text-brand-400 hover:text-brand-300 transition-colors">
+        <a id="poweredBy" href="https://github.com/CrCLARE/Signet" target="_blank" class="text-brand-400 hover:text-brand-300 transition-colors">
           Signet
         </a>
         · Licensed under Apache 2.0
@@ -493,7 +493,9 @@
       setHref('ctaDocs', cfg.docsUrl);
       setHref('footerRepo', cfg.repoUrl);
       setHref('footerDocs', cfg.docsUrl);
-      setHref('poweredBy', cfg.repoUrl || '#');
+
+      // NOTE: #poweredBy intentionally points to the upstream Signet repository,
+      // not to the fork's own repoUrl. Forks should link back to the source project.
     })();
 
     // ============================================================
@@ -559,10 +561,6 @@
       setTimeout(typeLoop, deleting ? 40 : 90);
     }
     window.addEventListener('load', () => setTimeout(typeLoop, 400));
-  </script>
-</body>
-</html>
-out(typeLoop, 400));
   </script>
 </body>
 </html>
