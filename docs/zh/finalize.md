@@ -194,7 +194,7 @@ npx wrangler tail
 
 更新密钥
 
-任何密钥都可以之后用 `npx wrangler secret put &lt;NAME&gt;` 更新。
+任何密钥都可以之后用 `npx wrangler secret put <NAME>` 更新。
 
 拉上游更新
 
