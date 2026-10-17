@@ -1,53 +1,54 @@
- # Signet
+ ---
+layout: home
 
-**SaaS authorization platform template for indie developers.**
+hero:
+  name: Signet
+  text: SaaS authorization platform template
+  tagline: Self-hosted license management for indie developers. Runs on Cloudflare's free tier.
+  image:
+    src: /logo.svg
+    alt: Signet
+  actions:
+    - theme: brand
+      text: Get started
+      link: /en/getting-started
+    - theme: alt
+      text: GitHub
+      link: https://github.com/CrCLARE/Signet
 
-Signet handles the boring, error-prone parts of running a licensed product —
-user accounts, order binding, license issuance, and an admin dashboard — so you
-can focus on building the thing you actually want to sell.
-
-Deploy it on Cloudflare's free tier. Own your data. Ship faster.
-
+features:
+  - icon: 👤
+    title: User accounts
+    details: Registration, sign-in, and admin-triggered password resets. PBKDF2-SHA256 hashing with per-user salts.
+  - icon: 🔗
+    title: Order binding
+    details: Connect payment orders from your provider to user accounts. Adapters are pluggable — Afdian ships out of the box.
+  - icon: 🛡️
+    title: Offline license issuance
+    details: Sign licenses with Ed25519. Once issued, they verify locally against an embedded public key — no server round-trip.
+  - icon: ⚙️
+    title: Admin dashboard
+    details: Search licenses, ban and unban with reasons, grant access to any user, audit every action. Independent admin credentials.
+  - icon: 🔍
+    title: Public license lookup
+    details: Anyone can verify a license without signing in. No emails, no order numbers, no personal data ever exposed.
+  - icon: 🔐
+    title: Zero-Trust by design
+    details: Open source with no black boxes. You control all the logic and every key — the platform never handles your secrets.
 ---
 
-## Who it's for
+## Live demo（Chronos Seal Website）
 
-You're building a game, a plugin, a desktop app, or any other piece of software
-you want to sell or license. You don't want to build a user account system, an
-order binding flow, or a license server from scratch. Signet gives you all three,
-out of the box.
-
-## What you get
-
-- **User accounts** — Register, sign in, reset password via admin
-- **Order binding** — Connect a payment to a user account
-- **Product management** — Users create products under their account
-- **License issuance** — Ed25519-signed, offline-verifiable license files
-- **Admin panel** — Ban, grant, reset, audit
-- **Public lookup** — Anyone can verify a license without signing in
-
-## What you don't get
-
-- No billing system — payments are handled by your chosen provider
-- No email service — password resets are triggered by you, the admin
-- No analytics — the template ships zero trackers
-
-## Where to go next
-
-- **[Getting started →](./getting-started)** — What Signet is and how it's licensed
-- **[Fork the repository →](./fork)** — Get your own copy
-- **[Deploy →](./worker)** — Set up Cloudflare Workers and D1
-
-## Live demo
-
-See Signet running in production at **[chronos.crclare.top](https://chronos.crclare.top)**.
+A working instance of this template is running at
+**[chronos.crclare.top](https://chronos.crclare.top)**.
 
 ## License
 
-Signet is released under the **Apache License 2.0**. See the
-[LICENSE](https://github.com/CrCLARE/Signet/blob/main/LICENSE) file in the repository
-for the full text.
+Signet is released under the **Apache License 2.0**.
 
-## Credits
+You may use it commercially, modify it, and redistribute it. You must retain the
+`NOTICE` file and state any changes you make. You may not use the "Signet" or
+"CrCLARE" trademarks without permission.
 
-Built by [CrCLARE Studio](https://crclare.top).
+See the [LICENSE](https://github.com/CrCLARE/Signet/blob/main/LICENSE) file for
+the full text.
