@@ -1,6 +1,6 @@
 # Contributing to Signet
 
-**[English](./CONTRIBUTING.md)** | [简体中文](./zh/CONTRIBUTING.md)
+**[English](../CONTRIBUTING.md)** | [简体中文](./zh/CONTRIBUTING.md)
 
 ---
 
@@ -56,7 +56,7 @@ npm run dev
 ## Styleguide
 
 ### Git Commit Messages
-We follow the Conventional Commits specification:
+We follow the [Conventional Commits](https://www.conventionalcommits.org) specification:
 
 feat: A new feature
 
@@ -83,7 +83,7 @@ Use semicolons at the end of statements.
 
 Keep functions small and focused.
 
-### Security
+## Security
 Because Signet handles sensitive data (passwords, license signing keys), security is paramount.
 
 Never commit secrets (API keys, private keys, .env files).
@@ -92,7 +92,7 @@ Ensure all user inputs are validated and sanitized.
 
 Always verify webhook signatures in payment adapters.
 
-If you discover a security vulnerability, do not open a public issue. Please report it privately as described in our SECURITY.md.
+If you discover a security vulnerability, do not open a public issue. Please report it privately as described in our [SECURITY.md](../SECURITY.md).
 
 ## License
-By contributing to Signet, you agree that your contributions will be licensed under the Apache License 2.0.
+By contributing to Signet, you agree that your contributions will be licensed under the [Apache License 2.0](../LICENSE).
