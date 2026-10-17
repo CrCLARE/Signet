@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Signet',
   description: '面向独立开发者的 SaaS 授权平台模板',
-  base: '/',
+  base: '/zh',
   lang: 'zh-CN',
 
   markdown: {
