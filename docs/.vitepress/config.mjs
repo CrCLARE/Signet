@@ -6,7 +6,6 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
-  // 禁用原生 HTML，防止 <NAME> 被当成 Vue 组件导致构建失败
   markdown: {
     html: false
   },
@@ -20,13 +19,14 @@ export default defineConfig({
     ['meta', { property: 'og:image', content: '/logo.svg' }]
   ],
 
+  // 1. 将默认语言（root）设为中文，URL 指向 /zh/
   locales: {
     root: {
       label: '简体中文',
       lang: 'zh-CN',
       title: 'Signet',
       description: '面向独立开发者的 SaaS 授权平台模板',
-      link: '/'
+      link: '/zh/'
     },
     en: {
       label: 'English',
@@ -37,10 +37,7 @@ export default defineConfig({
     }
   },
 
-  // 把 docs/zh/ 里的文件映射到根路径
-  rewrites: {
-    'zh/:rest*': ':rest*'
-  },
+  // 注意：去掉了 rewrites，物理路径和 URL 完全一一对应
 
   themeConfig: {
     logo: '/logo.svg',
@@ -52,7 +49,7 @@ export default defineConfig({
 
     lastUpdated: true,
 
-    // 全局 UI 渲染（上下页、编辑链接、大纲、页脚）
+    // 全局 UI 渲染配置
     docFooter: { prev: '上一篇', next: '下一篇' },
     outline: { label: '本页目录', level: [2, 3] },
     returnToTopLabel: '回到顶部',
@@ -71,16 +68,16 @@ export default defineConfig({
     },
 
     locales: {
-      // 简体中文（root）
+      // ================= 简体中文 (/zh/) =================
       root: {
         label: '简体中文',
         lang: 'zh-CN',
         themeConfig: {
           nav: [
-            { text: '指南', link: '/getting-started' },
-            { text: '部署', link: '/worker' },
-            { text: '高级', link: '/advanced' },
-            { text: '常见问题', link: '/faq' },
+            { text: '指南', link: '/zh/getting-started' },
+            { text: '部署', link: '/zh/worker' },
+            { text: '高级', link: '/zh/advanced' },
+            { text: '常见问题', link: '/zh/faq' },
             {
               text: '相关链接',
               items: [
@@ -91,40 +88,40 @@ export default defineConfig({
               ]
             }
           ],
-          // 使用对象形式，VitePress 才能计算上一页/下一页
+          // 前缀匹配 /zh/
           sidebar: {
-            '/': [
+            '/zh/': [
               {
                 text: '开始使用',
                 items: [
-                  { text: 'Signet 是什么？', link: '/' },
-                  { text: '快速开始', link: '/getting-started' },
-                  { text: 'Fork 仓库', link: '/fork' }
+                  { text: 'Signet 是什么？', link: '/zh/' },
+                  { text: '快速开始', link: '/zh/getting-started' },
+                  { text: 'Fork 仓库', link: '/zh/fork' }
                 ]
               },
               {
                 text: '部署',
                 items: [
-                  { text: 'Cloudflare Pages', link: '/pages' },
-                  { text: 'Cloudflare Workers', link: '/worker' },
-                  { text: 'D1 数据库', link: '/d1' },
-                  { text: '爱发电适配器', link: '/afdian' },
-                  { text: '收尾工作', link: '/finalize' }
+                  { text: 'Cloudflare Pages', link: '/zh/pages' },
+                  { text: 'Cloudflare Workers', link: '/zh/worker' },
+                  { text: 'D1 数据库', link: '/zh/d1' },
+                  { text: '爱发电适配器', link: '/zh/afdian' },
+                  { text: '收尾工作', link: '/zh/finalize' }
                 ]
               },
               {
                 text: '参考',
                 items: [
-                  { text: '高级：二次开发', link: '/advanced' },
-                  { text: '常见问题', link: '/faq' }
+                  { text: '高级：二次开发', link: '/zh/advanced' },
+                  { text: '常见问题', link: '/zh/faq' }
                 ]
               },
               {
                 text: '关于',
                 items: [
-                  { text: '关于 Signet', link: '/about' },
-                  { text: '贡献者名单', link: '/contributors' },
-                  { text: '赞助者名单', link: '/sponsors' }
+                  { text: '关于 Signet', link: '/zh/about' },
+                  { text: '贡献者名单', link: '/zh/contributors' },
+                  { text: '赞助者名单', link: '/zh/sponsors' }
                 ]
               }
             ]
@@ -132,7 +129,7 @@ export default defineConfig({
         }
       },
 
-      // 英文（挂在 /en/ 下）
+      // ================= English (/en/) =================
       en: {
         label: 'English',
         lang: 'en-US',
