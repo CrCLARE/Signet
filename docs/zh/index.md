@@ -1,4 +1,4 @@
- # Signet
+# Signet
 
 **面向独立开发者的 SaaS 授权平台模板。**
 
