@@ -8,7 +8,7 @@ First off, thank you for considering contributing to Signet! It's people like yo
 
 ## Code of Conduct
 
-By participating in this project, you are expected to uphold our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before contributing.
+By participating in this project, you are expected to uphold our [Code of Conduct](../CODE_OF_CONDUCT.md). Please read it before contributing.
 
 ## How Can I Contribute?
 
