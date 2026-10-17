@@ -5,7 +5,7 @@ adapter for it.
 
 If you're not using Afdian, skip this page — you can still deploy Signet and use
 the admin panel to grant access manually. For other providers, see
-[Adapters](./adapters).
+[Adapters](./en/adapters).
 
 ## What you'll do
 
