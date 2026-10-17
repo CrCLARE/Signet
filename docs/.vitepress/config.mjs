@@ -6,10 +6,7 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
-  // ------------------------------------------------------------
-  // 禁用 markdown 里的原生 HTML
-  // 防止 <NAME>、<your-username> 这类占位符被 Vue 当成自定义组件标签
-  // ------------------------------------------------------------
+  // 禁用 markdown 里的原生 HTML，防止 <NAME> 被当成组件
   markdown: {
     html: false
   },
@@ -23,9 +20,6 @@ export default defineConfig({
     ['meta', { property: 'og:image', content: '/logo.svg' }]
   ],
 
-  // ------------------------------------------------------------
-  // 顶层 locales（定义语言、标题、描述）
-  // ------------------------------------------------------------
   locales: {
     root: {
       label: '简体中文',
@@ -43,9 +37,7 @@ export default defineConfig({
     }
   },
 
-  // ------------------------------------------------------------
-  // 中文文档文件在 docs/zh/，映射到根路径
-  // ------------------------------------------------------------
+  // 将 docs/zh/ 映射到根路径
   rewrites: {
     'zh/:rest*': ':rest*'
   },
@@ -60,12 +52,9 @@ export default defineConfig({
 
     lastUpdated: true,
 
-    // ------------------------------------------------------------
-    // 主题级的 locales（按语言区分 nav、sidebar 等 UI 文字）
-    // ------------------------------------------------------------
     locales: {
       // ============================================================
-      // 简体中文（root，映射到根路径 /）
+      // 中文（root）
       // ============================================================
       root: {
         label: '简体中文',
@@ -87,43 +76,42 @@ export default defineConfig({
             }
           ],
 
-          sidebar: {
-            '/': [
-              {
-                text: '开始使用',
-                items: [
-                  { text: 'Signet 是什么？', link: '/' },
-                  { text: '快速开始', link: '/getting-started' },
-                  { text: 'Fork 仓库', link: '/fork' }
-                ]
-              },
-              {
-                text: '部署',
-                items: [
-                  { text: 'Cloudflare Pages', link: '/pages' },
-                  { text: 'Cloudflare Workers', link: '/worker' },
-                  { text: 'D1 数据库', link: '/d1' },
-                  { text: '爱发电适配器', link: '/afdian' },
-                  { text: '收尾工作', link: '/finalize' }
-                ]
-              },
-              {
-                text: '参考',
-                items: [
-                  { text: '高级：二次开发', link: '/advanced' },
-                  { text: '常见问题', link: '/faq' }
-                ]
-              },
-              {
-                text: '关于',
-                items: [
-                  { text: '关于 Signet', link: '/about' },
-                  { text: '贡献者名单', link: '/contributors' },
-                  { text: '赞助者名单', link: '/sponsors' }
-                ]
-              }
-            ]
-          },
+          // 注意这里：改成了数组形式，强制在所有页面显示
+          sidebar: [
+            {
+              text: '开始使用',
+              items: [
+                { text: 'Signet 是什么？', link: '/' },
+                { text: '快速开始', link: '/getting-started' },
+                { text: 'Fork 仓库', link: '/fork' }
+              ]
+            },
+            {
+              text: '部署',
+              items: [
+                { text: 'Cloudflare Pages', link: '/pages' },
+                { text: 'Cloudflare Workers', link: '/worker' },
+                { text: 'D1 数据库', link: '/d1' },
+                { text: '爱发电适配器', link: '/afdian' },
+                { text: '收尾工作', link: '/finalize' }
+              ]
+            },
+            {
+              text: '参考',
+              items: [
+                { text: '高级：二次开发', link: '/advanced' },
+                { text: '常见问题', link: '/faq' }
+              ]
+            },
+            {
+              text: '关于',
+              items: [
+                { text: '关于 Signet', link: '/about' },
+                { text: '贡献者名单', link: '/contributors' },
+                { text: '赞助者名单', link: '/sponsors' }
+              ]
+            }
+          ],
 
           editLink: {
             pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
@@ -168,43 +156,42 @@ export default defineConfig({
             }
           ],
 
-          sidebar: {
-            '/en/': [
-              {
-                text: 'Getting Started',
-                items: [
-                  { text: 'What is Signet?', link: '/en/' },
-                  { text: 'Getting started', link: '/en/getting-started' },
-                  { text: 'Fork the repository', link: '/en/fork' }
-                ]
-              },
-              {
-                text: 'Deploy',
-                items: [
-                  { text: 'Cloudflare Pages', link: '/en/pages' },
-                  { text: 'Cloudflare Workers', link: '/en/worker' },
-                  { text: 'D1 database', link: '/en/d1' },
-                  { text: 'Afdian adapter', link: '/en/afdian' },
-                  { text: 'Finishing touches', link: '/en/finalize' }
-                ]
-              },
-              {
-                text: 'Reference',
-                items: [
-                  { text: 'Advanced: extending Signet', link: '/en/advanced' },
-                  { text: 'FAQ', link: '/en/faq' }
-                ]
-              },
-              {
-                text: 'About',
-                items: [
-                  { text: 'About Signet', link: '/en/about' },
-                  { text: 'Contributors', link: '/en/contributors' },
-                  { text: 'Sponsors', link: '/en/sponsors' }
-                ]
-              }
-            ]
-          },
+          // 同样改成数组形式
+          sidebar: [
+            {
+              text: 'Getting Started',
+              items: [
+                { text: 'What is Signet?', link: '/en/' },
+                { text: 'Getting started', link: '/en/getting-started' },
+                { text: 'Fork the repository', link: '/en/fork' }
+              ]
+            },
+            {
+              text: 'Deploy',
+              items: [
+                { text: 'Cloudflare Pages', link: '/en/pages' },
+                { text: 'Cloudflare Workers', link: '/en/worker' },
+                { text: 'D1 database', link: '/en/d1' },
+                { text: 'Afdian adapter', link: '/en/afdian' },
+                { text: 'Finishing touches', link: '/en/finalize' }
+              ]
+            },
+            {
+              text: 'Reference',
+              items: [
+                { text: 'Advanced: extending Signet', link: '/en/advanced' },
+                { text: 'FAQ', link: '/en/faq' }
+              ]
+            },
+            {
+              text: 'About',
+              items: [
+                { text: 'About Signet', link: '/en/about' },
+                { text: 'Contributors', link: '/en/contributors' },
+                { text: 'Sponsors', link: '/en/sponsors' }
+              ]
+            }
+          ],
 
           editLink: {
             pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
