@@ -4,8 +4,7 @@ Afdian is a Chinese payment platform for creators. Signet ships with a built-in
 adapter for it.
 
 If you're not using Afdian, skip this page — you can still deploy Signet and use
-the admin panel to grant access manually. For other providers, see
-[Adapters](./en/adapters).
+the admin panel to grant access manually. 
 
 ## What you'll do
 
