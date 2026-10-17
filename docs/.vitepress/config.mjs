@@ -7,7 +7,8 @@ export default defineConfig({
   lang: 'zh-CN',
 
   markdown: {
-    // html: false // ← 不要关：它会连原始 HTML 和 Vue 组件一起禁用。<NAME> 请写成 `<NAME>` 或 &lt;NAME&gt;
+    // 防止 md 里的占位符（如 <username>、<TOKEN>）被 Vue 编译器当成组件标签导致 build 失败
+    html: false
   },
 
   head: [
