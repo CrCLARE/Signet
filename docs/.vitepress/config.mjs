@@ -6,9 +6,8 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
-  // 禁用 markdown 里的原生 HTML，防止 <NAME> 被当成组件
   markdown: {
-    html: false
+    html: false // 禁用原生 HTML，防止 <NAME> 被当成组件
   },
 
   head: [
@@ -37,7 +36,6 @@ export default defineConfig({
     }
   },
 
-  // 将 docs/zh/ 映射到根路径
   rewrites: {
     'zh/:rest*': ':rest*'
   },
@@ -52,10 +50,31 @@ export default defineConfig({
 
     lastUpdated: true,
 
+    // ------------------------------------------------------------
+    // 全局通用的 UI 配置（上下页、编辑链接、大纲、页脚）
+    // ------------------------------------------------------------
+    docFooter: { prev: '上一篇', next: '下一篇' },
+    outline: { label: '本页目录', level: [2, 3] },
+    returnToTopLabel: '回到顶部',
+    darkModeSwitchLabel: '主题',
+    sidebarMenuLabel: '菜单',
+    lastUpdatedText: '最后更新',
+
+    editLink: {
+      pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/:path',
+      text: '在 GitHub 上编辑此页'
+    },
+
+    footer: {
+      message: 'Apache License 2.0 · 开源无黑盒',
+      copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+    },
+
+    // ------------------------------------------------------------
+    // 语言级配置（nav 和 sidebar）
+    // ------------------------------------------------------------
     locales: {
-      // ============================================================
-      // 中文（root）
-      // ============================================================
+      // ================= 简体中文 =================
       root: {
         label: '简体中文',
         lang: 'zh-CN',
@@ -75,66 +94,48 @@ export default defineConfig({
               ]
             }
           ],
-
-          // 注意这里：改成了数组形式，强制在所有页面显示
-          sidebar: [
-            {
-              text: '开始使用',
-              items: [
-                { text: 'Signet 是什么？', link: '/' },
-                { text: '快速开始', link: '/getting-started' },
-                { text: 'Fork 仓库', link: '/fork' }
-              ]
-            },
-            {
-              text: '部署',
-              items: [
-                { text: 'Cloudflare Pages', link: '/pages' },
-                { text: 'Cloudflare Workers', link: '/worker' },
-                { text: 'D1 数据库', link: '/d1' },
-                { text: '爱发电适配器', link: '/afdian' },
-                { text: '收尾工作', link: '/finalize' }
-              ]
-            },
-            {
-              text: '参考',
-              items: [
-                { text: '高级：二次开发', link: '/advanced' },
-                { text: '常见问题', link: '/faq' }
-              ]
-            },
-            {
-              text: '关于',
-              items: [
-                { text: '关于 Signet', link: '/about' },
-                { text: '贡献者名单', link: '/contributors' },
-                { text: '赞助者名单', link: '/sponsors' }
-              ]
-            }
-          ],
-
-          editLink: {
-            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
-            text: '在 GitHub 上编辑此页'
-          },
-
-          footer: {
-            message: 'Apache License 2.0 · 开源无黑盒',
-            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
-          },
-
-          outline: { label: '本页目录', level: [2, 3] },
-          docFooter: { prev: '上一篇', next: '下一篇' },
-          lastUpdatedText: '最后更新',
-          returnToTopLabel: '回到顶部',
-          darkModeSwitchLabel: '主题',
-          sidebarMenuLabel: '菜单'
+          // 【关键】必须用对象形式，VitePress 才能计算上下页
+          sidebar: {
+            '/': [
+              {
+                text: '开始使用',
+                items: [
+                  { text: 'Signet 是什么？', link: '/' },
+                  { text: '快速开始', link: '/getting-started' },
+                  { text: 'Fork 仓库', link: '/fork' }
+                ]
+              },
+              {
+                text: '部署',
+                items: [
+                  { text: 'Cloudflare Pages', link: '/pages' },
+                  { text: 'Cloudflare Workers', link: '/worker' },
+                  { text: 'D1 数据库', link: '/d1' },
+                  { text: '爱发电适配器', link: '/afdian' },
+                  { text: '收尾工作', link: '/finalize' }
+                ]
+              },
+              {
+                text: '参考',
+                items: [
+                  { text: '高级：二次开发', link: '/advanced' },
+                  { text: '常见问题', link: '/faq' }
+                ]
+              },
+              {
+                text: '关于',
+                items: [
+                  { text: '关于 Signet', link: '/about' },
+                  { text: '贡献者名单', link: '/contributors' },
+                  { text: '赞助者名单', link: '/sponsors' }
+                ]
+              }
+            ]
+          }
         }
       },
 
-      // ============================================================
-      // English（挂在 /en/ 下）
-      // ============================================================
+      // ================= English =================
       en: {
         label: 'English',
         lang: 'en-US',
@@ -155,60 +156,44 @@ export default defineConfig({
               ]
             }
           ],
-
-          // 同样改成数组形式
-          sidebar: [
-            {
-              text: 'Getting Started',
-              items: [
-                { text: 'What is Signet?', link: '/en/' },
-                { text: 'Getting started', link: '/en/getting-started' },
-                { text: 'Fork the repository', link: '/en/fork' }
-              ]
-            },
-            {
-              text: 'Deploy',
-              items: [
-                { text: 'Cloudflare Pages', link: '/en/pages' },
-                { text: 'Cloudflare Workers', link: '/en/worker' },
-                { text: 'D1 database', link: '/en/d1' },
-                { text: 'Afdian adapter', link: '/en/afdian' },
-                { text: 'Finishing touches', link: '/en/finalize' }
-              ]
-            },
-            {
-              text: 'Reference',
-              items: [
-                { text: 'Advanced: extending Signet', link: '/en/advanced' },
-                { text: 'FAQ', link: '/en/faq' }
-              ]
-            },
-            {
-              text: 'About',
-              items: [
-                { text: 'About Signet', link: '/en/about' },
-                { text: 'Contributors', link: '/en/contributors' },
-                { text: 'Sponsors', link: '/en/sponsors' }
-              ]
-            }
-          ],
-
-          editLink: {
-            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
-            text: 'Edit this page on GitHub'
-          },
-
-          footer: {
-            message: 'Apache License 2.0 · Open source, no black boxes',
-            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
-          },
-
-          outline: { label: 'On this page', level: [2, 3] },
-          docFooter: { prev: 'Previous', next: 'Next' },
-          lastUpdatedText: 'Last updated',
-          returnToTopLabel: 'Back to top',
-          darkModeSwitchLabel: 'Theme',
-          sidebarMenuLabel: 'Menu'
+          // 英文侧边栏，也是对象形式
+          sidebar: {
+            '/en/': [
+              {
+                text: 'Getting Started',
+                items: [
+                  { text: 'What is Signet?', link: '/en/' },
+                  { text: 'Getting started', link: '/en/getting-started' },
+                  { text: 'Fork the repository', link: '/en/fork' }
+                ]
+              },
+              {
+                text: 'Deploy',
+                items: [
+                  { text: 'Cloudflare Pages', link: '/en/pages' },
+                  { text: 'Cloudflare Workers', link: '/en/worker' },
+                  { text: 'D1 database', link: '/en/d1' },
+                  { text: 'Afdian adapter', link: '/en/afdian' },
+                  { text: 'Finishing touches', link: '/en/finalize' }
+                ]
+              },
+              {
+                text: 'Reference',
+                items: [
+                  { text: 'Advanced: extending Signet', link: '/en/advanced' },
+                  { text: 'FAQ', link: '/en/faq' }
+                ]
+              },
+              {
+                text: 'About',
+                items: [
+                  { text: 'About Signet', link: '/en/about' },
+                  { text: 'Contributors', link: '/en/contributors' },
+                  { text: 'Sponsors', link: '/en/sponsors' }
+                ]
+              }
+            ]
+          }
         }
       }
     }
