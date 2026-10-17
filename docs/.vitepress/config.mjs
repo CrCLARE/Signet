@@ -3,20 +3,23 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Signet',
   description: '面向独立开发者的 SaaS 授权平台模板',
-  // base: '/zh', // ← 删掉：根域部署，中文走 /zh/、英文走 /en/，base 再设子路径会变成 /zh/zh/...
+  base: '/',
   lang: 'zh-CN',
 
   markdown: {
-    // 防止 md 里的占位符（如 <username>、<TOKEN>）被 Vue 编译器当成组件标签导致 build 失败
     html: false
   },
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#3b82f6' }]
+    ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'Signet' }],
+    ['meta', { property: 'og:description', content: 'SaaS authorization platform template for indie developers.' }],
+    ['meta', { property: 'og:image', content: '/logo.svg' }]
   ],
 
-  // 直接分 zh 和 en，不要 root，从根源上斩断路径混乱
+  // 不再用 root + rewrites，直接 zh / en 双目录
   locales: {
     zh: {
       label: '简体中文',
@@ -34,23 +37,19 @@ export default defineConfig({
     }
   },
 
+  // 删掉 rewrites
+
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'Signet',
-
-    // 本地搜索，locale 会自动继承
-    search: {
-      provider: 'local'
-    },
-
+    search: { provider: 'local' },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/CrCLARE/Signet' }
     ],
-
     lastUpdated: true,
 
-    // ================== 中文配置 ==================
     locales: {
+      // ================== 中文 ==================
       zh: {
         label: '简体中文',
         lang: 'zh-CN',
@@ -60,15 +59,23 @@ export default defineConfig({
             { text: '指南', link: '/zh/getting-started' },
             { text: '部署', link: '/zh/worker' },
             { text: '高级', link: '/zh/advanced' },
-            { text: '常见问题', link: '/zh/faq' }
+            { text: '常见问题', link: '/zh/faq' },
+            {
+              text: '相关链接',
+              items: [
+                { text: 'GitHub 仓库', link: 'https://github.com/CrCLARE/Signet' },
+                { text: 'Gitee 镜像', link: 'https://gitee.com/CLARE-XHL/Signet' },
+                { text: '在线演示', link: 'https://chronos.crclare.top' },
+                { text: '赞助支持', link: 'https://crclare.top/reward' }
+              ]
+            }
           ],
-          // 前缀精准匹配 /zh/，这样上一页/下一页才能算出来
           sidebar: {
             '/zh/': [
               {
                 text: '开始使用',
                 items: [
-                  { text: '介绍', link: '/zh/' },
+                  { text: 'Signet 是什么？', link: '/zh/' },
                   { text: '快速开始', link: '/zh/getting-started' },
                   { text: 'Fork 仓库', link: '/zh/fork' }
                 ]
@@ -87,7 +94,12 @@ export default defineConfig({
                 text: '参考',
                 items: [
                   { text: '高级：二次开发', link: '/zh/advanced' },
-                  { text: '常见问题', link: '/zh/faq' },
+                  { text: '常见问题', link: '/zh/faq' }
+                ]
+              },
+              {
+                text: '关于',
+                items: [
                   { text: '关于 Signet', link: '/zh/about' },
                   { text: '贡献者名单', link: '/zh/contributors' },
                   { text: '赞助者名单', link: '/zh/sponsors' }
@@ -95,22 +107,25 @@ export default defineConfig({
               }
             ]
           },
-          // 下面这些必须塞进 zh 的 themeConfig 里，否则直接隐身
-          docFooter: { prev: '上一篇', next: '下一篇' },
-          outline: { label: '本页目录', level: [2, 3] },
           editLink: {
-            // :path 已包含 zh/ 这一段，前面不要再拼 locale 目录
+            // :path 已包含 zh/，前面不要再拼目录
             pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/:path',
             text: '在 GitHub 上编辑此页'
           },
+          outline: { label: '本页目录', level: [2, 3] },
+          docFooter: { prev: '上一篇', next: '下一篇' },
           footer: {
-            message: 'Apache License 2.0',
-            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio`
-          }
+            message: 'Apache License 2.0 · 开源无黑盒',
+            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+          },
+          lastUpdatedText: '最后更新',
+          returnToTopLabel: '回到顶部',
+          darkModeSwitchLabel: '主题',
+          sidebarMenuLabel: '菜单'
         }
       },
 
-      // ================== 英文配置 ==================
+      // ================== English ==================
       en: {
         label: 'English',
         lang: 'en-US',
@@ -120,16 +135,25 @@ export default defineConfig({
             { text: 'Guide', link: '/en/getting-started' },
             { text: 'Deploy', link: '/en/worker' },
             { text: 'Advanced', link: '/en/advanced' },
-            { text: 'FAQ', link: '/en/faq' }
+            { text: 'FAQ', link: '/en/faq' },
+            {
+              text: 'Links',
+              items: [
+                { text: 'GitHub', link: 'https://github.com/CrCLARE/Signet' },
+                { text: 'Gitee Mirror', link: 'https://gitee.com/CLARE-XHL/Signet' },
+                { text: 'Live demo', link: 'https://chronos.crclare.top' },
+                { text: 'Sponsor', link: 'https://crclare.top/reward' }
+              ]
+            }
           ],
           sidebar: {
             '/en/': [
               {
                 text: 'Getting Started',
                 items: [
-                  { text: 'Introduction', link: '/en/' },
+                  { text: 'What is Signet?', link: '/en/' },
                   { text: 'Getting started', link: '/en/getting-started' },
-                  { text: 'Fork', link: '/en/fork' }
+                  { text: 'Fork the repository', link: '/en/fork' }
                 ]
               },
               {
@@ -145,8 +169,13 @@ export default defineConfig({
               {
                 text: 'Reference',
                 items: [
-                  { text: 'Advanced', link: '/en/advanced' },
-                  { text: 'FAQ', link: '/en/faq' },
+                  { text: 'Advanced: extending Signet', link: '/en/advanced' },
+                  { text: 'FAQ', link: '/en/faq' }
+                ]
+              },
+              {
+                text: 'About',
+                items: [
                   { text: 'About Signet', link: '/en/about' },
                   { text: 'Contributors', link: '/en/contributors' },
                   { text: 'Sponsors', link: '/en/sponsors' }
@@ -154,16 +183,20 @@ export default defineConfig({
               }
             ]
           },
-          docFooter: { prev: 'Previous', next: 'Next' },
-          outline: { label: 'On this page', level: [2, 3] },
           editLink: {
             pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/:path',
             text: 'Edit this page on GitHub'
           },
+          outline: { label: 'On this page', level: [2, 3] },
+          docFooter: { prev: 'Previous', next: 'Next' },
           footer: {
-            message: 'Apache License 2.0',
-            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio`
-          }
+            message: 'Apache License 2.0 · Open source, no black box',
+            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+          },
+          lastUpdatedText: 'Last updated',
+          returnToTopLabel: 'Back to top',
+          darkModeSwitchLabel: 'Theme',
+          sidebarMenuLabel: 'Menu'
         }
       }
     }
