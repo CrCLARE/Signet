@@ -1,50 +1,53 @@
- # Signet
+ ---
+layout: home
 
-**面向独立开发者的 SaaS 授权平台模板。**
+hero:
+  name: Signet
+  text: SaaS 授权平台模板
+  tagline: 面向独立开发者的自托管授权系统，跑在 Cloudflare 免费套餐上
+  image:
+    src: /logo.svg
+    alt: Signet
+  actions:
+    - theme: brand
+      text: 快速开始
+      link: /zh/getting-started
+    - theme: alt
+      text: GitHub
+      link: https://github.com/CrCLARE/Signet
 
-Signet 把"运营一个授权产品"里最繁琐、最容易出错的部分都替你处理好了——
-用户账号、订单绑定、授权签发、管理后台。你只需要专注于你真正想卖的那个东西。
-
-部署在 Cloudflare 免费套餐上。数据完全由你掌控。让发布快一点。
-
+features:
+  - icon: 👤
+    title: 用户账号
+    details: 注册、登录、管理员重置密码。PBKDF2-SHA256 哈希，每个用户独立加盐。
+  - icon: 🔗
+    title: 订单绑定
+    details: 把支付渠道的订单与用户账号关联。适配器可插拔——爱发电开箱即用。
+  - icon: 🛡️
+    title: 离线授权签发
+    details: 用 Ed25519 签名授权文件。签发后本地即可验证，内置公钥，无需回连服务器。
+  - icon: ⚙️
+    title: 管理后台
+    details: 查询授权、封禁与解封（带理由）、给任意用户开通权限、审计每一次操作。独立管理员凭证。
+  - icon: 🔍
+    title: 公开授权查询
+    details: 任何人无需登录即可验证授权。不暴露邮箱、订单号、或任何个人信息。
+  - icon: 🔐
+    title: 零信任设计
+    details: 开源无黑盒。所有逻辑与密钥都由你自己掌握——平台从不接触你的秘密。
 ---
 
-## 给谁用
+## 线上演示（Chronos Seal.官网）
 
-你在做一款游戏、一个插件、一个桌面应用，或者任何你想销售或授权的软件。
-你不想从零搭一套用户系统、一套订单绑定流程、一个授权服务器。
-Signet 把这三件事一起给你，开箱即用。
-
-## 你能得到什么
-
-- **用户账号** —— 注册、登录、管理员重置密码
-- **订单绑定** —— 把支付订单与用户账号绑定
-- **产品管理** —— 用户在自己账号下创建产品
-- **授权签发** —— Ed25519 签名、可离线验证的授权文件
-- **管理后台** —— 封禁、开通、重置、审计
-- **公开查询** —— 任何人无需登录即可验证授权
-
-## 你得不到什么
-
-- 没有计费系统 —— 支付由你选择的渠道处理
-- 没有邮件服务 —— 密码重置由你作为管理员手动触发
-- 没有任何分析 —— 模板不带任何追踪脚本
-
-## 下一步
-
-- **[快速开始 →](./getting-started)** —— Signet 是什么，以及它的许可协议
-- **[Fork 仓库 →](./fork)** —— 拿到你自己的副本
-- **[部署 →](./worker)** —— 配置 Cloudflare Workers 和 D1
-
-## 线上演示
-
-在生产环境中运行的 Signet 实例：**[chronos.crclare.top](https://chronos.crclare.top)**。
+本模板的完整实例正在生产环境中运行：
+**[chronos.crclare.top](https://chronos.crclare.top)**。
 
 ## 许可
 
-Signet 采用 **Apache License 2.0** 发布。完整条款见仓库中的
-[LICENSE](https://github.com/CrCLARE/Signet/blob/main/LICENSE) 文件。
+Signet 采用 **Apache License 2.0** 发布。
 
-## 致谢
+你可以商业化使用、修改、再分发。但必须保留 `NOTICE` 文件，并声明你做出的修改。
+未经许可不得使用 "Signet" 或 "CrCLARE" 商标。
 
-由 [CrCLARE Studio](https://crclare.top) 构建。
+完整条款见
+[LICENSE](https://github.com/CrCLARE/Signet/blob/main/LICENSE)。
