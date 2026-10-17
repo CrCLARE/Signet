@@ -6,8 +6,9 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
+  // 禁用原生 HTML，防止 <NAME> 被当成 Vue 组件导致构建失败
   markdown: {
-    html: false // 禁用原生 HTML，防止 <NAME> 被当成组件
+    html: false
   },
 
   head: [
@@ -36,6 +37,7 @@ export default defineConfig({
     }
   },
 
+  // 把 docs/zh/ 里的文件映射到根路径
   rewrites: {
     'zh/:rest*': ':rest*'
   },
@@ -50,9 +52,7 @@ export default defineConfig({
 
     lastUpdated: true,
 
-    // ------------------------------------------------------------
-    // 全局通用的 UI 配置（上下页、编辑链接、大纲、页脚）
-    // ------------------------------------------------------------
+    // 全局 UI 渲染（上下页、编辑链接、大纲、页脚）
     docFooter: { prev: '上一篇', next: '下一篇' },
     outline: { label: '本页目录', level: [2, 3] },
     returnToTopLabel: '回到顶部',
@@ -70,11 +70,8 @@ export default defineConfig({
       copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
     },
 
-    // ------------------------------------------------------------
-    // 语言级配置（nav 和 sidebar）
-    // ------------------------------------------------------------
     locales: {
-      // ================= 简体中文 =================
+      // 简体中文（root）
       root: {
         label: '简体中文',
         lang: 'zh-CN',
@@ -94,7 +91,7 @@ export default defineConfig({
               ]
             }
           ],
-          // 【关键】必须用对象形式，VitePress 才能计算上下页
+          // 使用对象形式，VitePress 才能计算上一页/下一页
           sidebar: {
             '/': [
               {
@@ -135,7 +132,7 @@ export default defineConfig({
         }
       },
 
-      // ================= English =================
+      // 英文（挂在 /en/ 下）
       en: {
         label: 'English',
         lang: 'en-US',
@@ -156,7 +153,6 @@ export default defineConfig({
               ]
             }
           ],
-          // 英文侧边栏，也是对象形式
           sidebar: {
             '/en/': [
               {
