@@ -6,16 +6,8 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
-  // ------------------------------------------------------------
-  // 禁用 markdown 里的原生 HTML
-  //
-  // 防止 <NAME>、<your-username> 这类占位符被 Vue 当成
-  // 自定义组件标签，导致 "Element is missing end tag" 构建错误。
-  //
-  // Signet 的文档不使用内联 HTML，所以这个配置没有副作用。
-  // ------------------------------------------------------------
   markdown: {
-    html: false
+    html: false // 防止 <NAME> 被当成标签
   },
 
   head: [
@@ -27,11 +19,7 @@ export default defineConfig({
     ['meta', { property: 'og:image', content: '/logo.svg' }]
   ],
 
-  // ------------------------------------------------------------
-  // 多语言配置
-  // root = 简体中文（默认进入），en = English（挂在 /en/ 下）
-  // 中文文档实际文件位于 docs/zh/，URL 通过 rewrites 映射到根路径。
-  // ------------------------------------------------------------
+  // 根路径 = 中文（默认），/en/ = 英文
   locales: {
     root: {
       label: '简体中文',
@@ -49,10 +37,7 @@ export default defineConfig({
     }
   },
 
-  // ------------------------------------------------------------
-  // 把 docs/zh/ 里的文件映射到根路径
-  // 文件仍然放在 docs/zh/ 里，URL 上访问 /
-  // ------------------------------------------------------------
+  // 把 docs/zh/ 里的文件映射到根路径，URL 上访问 /
   rewrites: {
     'zh/:rest*': ':rest*'
   },
@@ -60,91 +45,92 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'Signet',
-
+    search: { provider: 'local' }, // 补上搜索
     socialLinks: [
       { icon: 'github', link: 'https://github.com/CrCLARE/Signet' }
     ],
-
     lastUpdated: true,
 
-    editLink: {
-      pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
-      text: '在 GitHub 上编辑此页'
-    },
-
-    footer: {
-      message: 'Apache License 2.0 · 开源无黑盒',
-      copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
-    },
-
     // ============================================================
-    // 中文（root）—— URL 根路径，文件在 docs/zh/
-    // ============================================================
-    nav: [
-      { text: '指南', link: '/getting-started' },
-      { text: '部署', link: '/worker' },
-      { text: '高级', link: '/advanced' },
-      { text: '常见问题', link: '/faq' },
-      {
-        text: '相关链接',
-        items: [
-          { text: 'GitHub 仓库', link: 'https://github.com/CrCLARE/Signet' },
-          { text: 'Gitee 镜像', link: 'https://gitee.com/CLARE-XHL/Signet' },
-          { text: '在线演示', link: 'https://chronos.crclare.top' },
-          { text: '赞助支持', link: 'https://crclare.top/reward' }
-        ]
-      }
-    ],
-
-    sidebar: {
-      '/': [
-        {
-          text: '开始使用',
-          items: [
-            { text: 'Signet 是什么？', link: '/' },
-            { text: '快速开始', link: '/getting-started' },
-            { text: 'Fork 仓库', link: '/fork' }
-          ]
-        },
-        {
-          text: '部署',
-          items: [
-            { text: 'Cloudflare Pages', link: '/pages' },
-            { text: 'Cloudflare Workers', link: '/worker' },
-            { text: 'D1 数据库', link: '/d1' },
-            { text: '爱发电适配器', link: '/afdian' },
-            { text: '收尾工作', link: '/finalize' }
-          ]
-        },
-        {
-          text: '参考',
-          items: [
-            { text: '高级：二次开发', link: '/advanced' },
-            { text: '常见问题', link: '/faq' }
-          ]
-        },
-        {
-          text: '关于',
-          items: [
-            { text: '关于 Signet', link: '/about' },
-            { text: '贡献者名单', link: '/contributors' },
-            { text: '赞助者名单', link: '/sponsors' }
-          ]
-        }
-      ]
-    },
-
-    outline: { label: '本页目录', level: [2, 3] },
-    docFooter: { prev: '上一篇', next: '下一篇' },
-    lastUpdatedText: '最后更新',
-    returnToTopLabel: '回到顶部',
-    darkModeSwitchLabel: '主题',
-    sidebarMenuLabel: '菜单',
-
-    // ============================================================
-    // English（挂在 /en/ 下）
+    // 关键修复：用 root 和 en 严格区分主题配置
     // ============================================================
     locales: {
+      // ---------------- 中文（root） ----------------
+      root: {
+        label: '简体中文',
+        lang: 'zh-CN',
+        link: '/',
+        themeConfig: {
+          nav: [
+            { text: '指南', link: '/getting-started' },
+            { text: '部署', link: '/worker' },
+            { text: '高级', link: '/advanced' },
+            { text: '常见问题', link: '/faq' },
+            {
+              text: '相关链接',
+              items: [
+                { text: 'GitHub 仓库', link: 'https://github.com/CrCLARE/Signet' },
+                { text: 'Gitee 镜像', link: 'https://gitee.com/CLARE-XHL/Signet' },
+                { text: '在线演示', link: 'https://chronos.crclare.top' },
+                { text: '赞助支持', link: 'https://crclare.top/reward' }
+              ]
+            }
+          ],
+          sidebar: {
+            '/': [
+              {
+                text: '开始使用',
+                items: [
+                  { text: 'Signet 是什么？', link: '/' },
+                  { text: '快速开始', link: '/getting-started' },
+                  { text: 'Fork 仓库', link: '/fork' }
+                ]
+              },
+              {
+                text: '部署',
+                items: [
+                  { text: 'Cloudflare Pages', link: '/pages' },
+                  { text: 'Cloudflare Workers', link: '/worker' },
+                  { text: 'D1 数据库', link: '/d1' },
+                  { text: '爱发电适配器', link: '/afdian' },
+                  { text: '收尾工作', link: '/finalize' }
+                ]
+              },
+              {
+                text: '参考',
+                items: [
+                  { text: '高级：二次开发', link: '/advanced' },
+                  { text: '常见问题', link: '/faq' }
+                ]
+              },
+              {
+                text: '关于',
+                items: [
+                  { text: '关于 Signet', link: '/about' },
+                  { text: '贡献者名单', link: '/contributors' },
+                  { text: '赞助者名单', link: '/sponsors' }
+                ]
+              }
+            ]
+          },
+          editLink: {
+            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
+            text: '在 GitHub 上编辑此页'
+          },
+          footer: {
+            message: 'Apache License 2.0 · 开源无黑盒',
+            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+          },
+          outline: { label: '本页目录', level: [2, 3] },
+          docFooter: { prev: '上一篇', next: '下一篇' },
+          lastUpdatedText: '最后更新',
+          returnToTopLabel: '回到顶部',
+          darkModeSwitchLabel: '主题',
+          sidebarMenuLabel: '菜单'
+        }
+      },
+
+      // ---------------- English（/en/） ----------------
       en: {
         label: 'English',
         lang: 'en-US',
@@ -165,7 +151,6 @@ export default defineConfig({
               ]
             }
           ],
-
           sidebar: {
             '/en/': [
               {
@@ -203,12 +188,14 @@ export default defineConfig({
               }
             ]
           },
-
           editLink: {
             pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
             text: 'Edit this page on GitHub'
           },
-
+          footer: {
+            message: 'Apache License 2.0 · Open source, no black box',
+            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+          },
           outline: { label: 'On this page', level: [2, 3] },
           docFooter: { prev: 'Previous', next: 'Next' },
           lastUpdatedText: 'Last updated',
