@@ -3,11 +3,11 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Signet',
   description: '面向独立开发者的 SaaS 授权平台模板',
-  base: '/zh',
+  // base: '/zh', // ← 删掉：根域部署，中文走 /zh/、英文走 /en/，base 再设子路径会变成 /zh/zh/...
   lang: 'zh-CN',
 
   markdown: {
-    html: false // 防止 <NAME> 被当成标签
+    // html: false // ← 不要关：它会连原始 HTML 和 Vue 组件一起禁用。<NAME> 请写成 `<NAME>` 或 &lt;NAME&gt;
   },
 
   head: [
@@ -36,6 +36,11 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     siteTitle: 'Signet',
+
+    // 本地搜索，locale 会自动继承
+    search: {
+      provider: 'local'
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/CrCLARE/Signet' }
@@ -93,7 +98,8 @@ export default defineConfig({
           docFooter: { prev: '上一篇', next: '下一篇' },
           outline: { label: '本页目录', level: [2, 3] },
           editLink: {
-            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
+            // :path 已包含 zh/ 这一段，前面不要再拼 locale 目录
+            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/:path',
             text: '在 GitHub 上编辑此页'
           },
           footer: {
@@ -150,7 +156,7 @@ export default defineConfig({
           docFooter: { prev: 'Previous', next: 'Next' },
           outline: { label: 'On this page', level: [2, 3] },
           editLink: {
-            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
+            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/:path',
             text: 'Edit this page on GitHub'
           },
           footer: {
