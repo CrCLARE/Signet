@@ -1,4 +1,4 @@
- # Signet
+# Signet
 
 **SaaS authorization platform template for indie developers.**
 
