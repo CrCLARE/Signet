@@ -6,11 +6,10 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
   
-  // 开启干净链接，让 URL 去掉 .html 后缀
   cleanUrls: true,
 
   markdown: {
-    html: false // 防止 <NAME> 被当成标签导致报错
+    html: false
   },
 
   head: [
@@ -22,7 +21,7 @@ export default defineConfig({
     ['meta', { property: 'og:image', content: '/logo.svg' }]
   ],
 
-  // 1. 声明语言：root 就是中文（对应 /），en 对应 /en/
+  // 根路径是中文，/en/ 是英文
   locales: {
     root: {
       label: '简体中文',
@@ -36,8 +35,7 @@ export default defineConfig({
     }
   },
 
-  // 2. 核心魔法：把 docs/zh/ 下的所有 md 映射到根路径
-  // 这样 docs/zh/afdian.md 实际访问路径就是 /afdian
+  // 将 docs/zh/ 映射到根路径
   rewrites: {
     'zh/:rest*': ':rest*'
   },
@@ -52,8 +50,7 @@ export default defineConfig({
     lastUpdated: true,
 
     // ============================================================
-    // 中文配置：直接写在外层！不要包 locales.root！
-    // 路径全都不带 /zh/，因为已经被 rewrite 到根路径了
+    // 中文默认配置（直接写在外层）
     // ============================================================
     nav: [
       { text: '指南', link: '/getting-started' },
@@ -110,7 +107,6 @@ export default defineConfig({
     },
 
     editLink: {
-      // 虽然访问路径是根目录，但源文件还在 docs/zh/ 里，所以这里必须带 zh
       pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/zh/:path',
       text: '在 GitHub 上编辑此页'
     },
@@ -128,81 +124,81 @@ export default defineConfig({
     sidebarMenuLabel: '菜单',
 
     // ============================================================
-    // 英文配置：只放 en 即可
+    // 英文配置（去掉了多余的 themeConfig 壳子）
     // ============================================================
     locales: {
       en: {
         label: 'English',
         lang: 'en-US',
         link: '/en/',
-        themeConfig: {
-          nav: [
-            { text: 'Guide', link: '/en/getting-started' },
-            { text: 'Deploy', link: '/en/worker' },
-            { text: 'Advanced', link: '/en/advanced' },
-            { text: 'FAQ', link: '/en/faq' },
+        
+        // 👇 直接平铺，绝对不要再套 themeConfig 👇
+        nav: [
+          { text: 'Guide', link: '/en/getting-started' },
+          { text: 'Deploy', link: '/en/worker' },
+          { text: 'Advanced', link: '/en/advanced' },
+          { text: 'FAQ', link: '/en/faq' },
+          {
+            text: 'Links',
+            items: [
+              { text: 'GitHub', link: 'https://github.com/CrCLARE/Signet' },
+              { text: 'Gitee Mirror', link: 'https://gitee.com/CLARE-XHL/Signet' },
+              { text: 'Live demo', link: 'https://chronos.crclare.top' },
+              { text: 'Sponsor', link: 'https://crclare.top/reward' }
+            ]
+          }
+        ],
+        sidebar: {
+          '/en/': [
             {
-              text: 'Links',
+              text: 'Getting Started',
               items: [
-                { text: 'GitHub', link: 'https://github.com/CrCLARE/Signet' },
-                { text: 'Gitee Mirror', link: 'https://gitee.com/CLARE-XHL/Signet' },
-                { text: 'Live demo', link: 'https://chronos.crclare.top' },
-                { text: 'Sponsor', link: 'https://crclare.top/reward' }
+                { text: 'What is Signet?', link: '/en/' },
+                { text: 'Getting started', link: '/en/getting-started' },
+                { text: 'Fork the repository', link: '/en/fork' }
+              ]
+            },
+            {
+              text: 'Deploy',
+              items: [
+                { text: 'Cloudflare Pages', link: '/en/pages' },
+                { text: 'Cloudflare Workers', link: '/en/worker' },
+                { text: 'D1 database', link: '/en/d1' },
+                { text: 'Afdian adapter', link: '/en/afdian' },
+                { text: 'Finishing touches', link: '/en/finalize' }
+              ]
+            },
+            {
+              text: 'Reference',
+              items: [
+                { text: 'Advanced: extending Signet', link: '/en/advanced' },
+                { text: 'FAQ', link: '/en/faq' }
+              ]
+            },
+            {
+              text: 'About',
+              items: [
+                { text: 'About Signet', link: '/en/about' },
+                { text: 'Contributors', link: '/en/contributors' },
+                { text: 'Sponsors', link: '/en/sponsors' }
               ]
             }
-          ],
-          sidebar: {
-            '/en/': [
-              {
-                text: 'Getting Started',
-                items: [
-                  { text: 'What is Signet?', link: '/en/' },
-                  { text: 'Getting started', link: '/en/getting-started' },
-                  { text: 'Fork the repository', link: '/en/fork' }
-                ]
-              },
-              {
-                text: 'Deploy',
-                items: [
-                  { text: 'Cloudflare Pages', link: '/en/pages' },
-                  { text: 'Cloudflare Workers', link: '/en/worker' },
-                  { text: 'D1 database', link: '/en/d1' },
-                  { text: 'Afdian adapter', link: '/en/afdian' },
-                  { text: 'Finishing touches', link: '/en/finalize' }
-                ]
-              },
-              {
-                text: 'Reference',
-                items: [
-                  { text: 'Advanced: extending Signet', link: '/en/advanced' },
-                  { text: 'FAQ', link: '/en/faq' }
-                ]
-              },
-              {
-                text: 'About',
-                items: [
-                  { text: 'About Signet', link: '/en/about' },
-                  { text: 'Contributors', link: '/en/contributors' },
-                  { text: 'Sponsors', link: '/en/sponsors' }
-                ]
-              }
-            ]
-          },
-          editLink: {
-            pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
-            text: 'Edit this page on GitHub'
-          },
-          footer: {
-            message: 'Apache License 2.0 · Open source, no black box',
-            copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
-          },
-          outline: { label: 'On this page', level: [2, 3] },
-          docFooter: { prev: 'Previous', next: 'Next' },
-          lastUpdatedText: 'Last updated',
-          returnToTopLabel: 'Back to top',
-          darkModeSwitchLabel: 'Theme',
-          sidebarMenuLabel: 'Menu'
-        }
+          ]
+        },
+        editLink: {
+          pattern: 'https://github.com/CrCLARE/Signet/edit/main/docs/en/:path',
+          text: 'Edit this page on GitHub'
+        },
+        footer: {
+          message: 'Apache License 2.0 · Open source, no black box',
+          copyright: `Copyright © ${new Date().getFullYear()} CrCLARE Studio · Made by CLARE-XHL`
+        },
+        outline: { label: 'On this page', level: [2, 3] },
+        docFooter: { prev: 'Previous', next: 'Next' },
+        lastUpdatedText: 'Last updated',
+        returnToTopLabel: 'Back to top',
+        darkModeSwitchLabel: 'Theme',
+        sidebarMenuLabel: 'Menu'
       }
     }
   }
