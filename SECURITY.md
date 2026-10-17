@@ -20,7 +20,7 @@ If you believe you have found a security vulnerability in Signet, please report 
 There are two ways to report a vulnerability:
 
 1. **GitHub Security Advisories**: Go to the **Security** tab of the repository, click **Advisories**, and select **Report a vulnerability**. This is the preferred method as it keeps the discussion private and provides a secure framework for collaboration.
-2. **Email**: Send an email to `hi@crclare.top`. Include the word "SECURITY" in the subject line.
+2. **Email**: Send an email to `contact@crclare.top`. Include the word "SECURITY" in the subject line.
 
 ### What to include in your report
 
