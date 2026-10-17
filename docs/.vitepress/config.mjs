@@ -6,6 +6,18 @@ export default defineConfig({
   base: '/',
   lang: 'zh-CN',
 
+  // ------------------------------------------------------------
+  // 禁用 markdown 里的原生 HTML
+  //
+  // 防止 <NAME>、<your-username> 这类占位符被 Vue 当成
+  // 自定义组件标签，导致 "Element is missing end tag" 构建错误。
+  //
+  // Signet 的文档不使用内联 HTML，所以这个配置没有副作用。
+  // ------------------------------------------------------------
+  markdown: {
+    html: false
+  },
+
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
@@ -18,7 +30,7 @@ export default defineConfig({
   // ------------------------------------------------------------
   // 多语言配置
   // root = 简体中文（默认进入），en = English（挂在 /en/ 下）
-  // 中文文档实际文件位于 docs/zh/，URL 通过 rewrite 映射到根路径。
+  // 中文文档实际文件位于 docs/zh/，URL 通过 rewrites 映射到根路径。
   // ------------------------------------------------------------
   locales: {
     root: {
@@ -39,8 +51,7 @@ export default defineConfig({
 
   // ------------------------------------------------------------
   // 把 docs/zh/ 里的文件映射到根路径
-  // 这样用户访问 / 时看到中文，访问 /en/ 时看到英文
-  // 文件仍然放在 docs/zh/ 里，结构不乱
+  // 文件仍然放在 docs/zh/ 里，URL 上访问 /
   // ------------------------------------------------------------
   rewrites: {
     'zh/:rest*': ':rest*'
