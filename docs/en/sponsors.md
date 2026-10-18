@@ -1,4 +1,4 @@
- # Sponsors
+# Sponsors
 
 Signet is free and open source. It's maintained by a small team on their own
 time. If it saves you hours of work, consider supporting the project.
