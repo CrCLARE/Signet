@@ -1,4 +1,4 @@
- # Fork the repository
+# Fork the repository
 
 Before you can deploy anything, you need your own copy of the Signet source code.
 
@@ -24,7 +24,7 @@ cd Signet
 
 Replace <your-username> with your actual GitHub username.
 
-Step 3 — Explore the structure
+## Step 3 — Explore the structure
 
 You should see:
 
@@ -47,7 +47,7 @@ Signet/
 
 The two directories you'll work with most are backend/ and frontend/.
 
-Step 4 — Verify Node.js
+## Step 4 — Verify Node.js
 
 Confirm you have Node.js 18 or newer:
 
@@ -58,13 +58,13 @@ node --version
 If it prints v18.x.x or higher, you're good. If not, install a newer version
 from nodejs.org.
 
-What's next
+# What's next
 
 Now that you have your own copy, it's time to deploy the frontend.
 
 → Configure Cloudflare Pages
 
-A note on staying in sync
+## A note on staying in sync
 
 If you want to pull in future updates from the upstream repository (for example,
 security fixes), you can add it as a remote:
