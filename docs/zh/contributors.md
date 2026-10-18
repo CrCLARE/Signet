@@ -1,4 +1,4 @@
- # 贡献者
+# 贡献者
 
 Signet 由 CrCLARE Studio 的小团队构建和维护。
 
