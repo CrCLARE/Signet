@@ -44,7 +44,7 @@ export default {
 };
 ```
 
-2. 注册它
+### 2. 注册它
 
 编辑 backend/src/adapters/index.js：
 
@@ -58,14 +58,14 @@ const registry = {
 };
 ```
 
-3. 配置密钥
+### 3. 配置密钥
 
 ```bash
 npx wrangler secret put STRIPE_SECRET_KEY
 npx wrangler secret put STRIPE_WEBHOOK_SECRET
 ```
 
-4. 部署
+### 4. 部署
 
 ```bash
 npx wrangler deploy
@@ -84,7 +84,7 @@ npx wrangler deploy
 
 ---
 
-自定义授权文件格式
+## 自定义授权文件格式
 
 默认授权文件是一个 JSON 对象：
 
@@ -114,12 +114,12 @@ npx wrangler deploy
 
 ---
 
-接入人机验证（captcha）
+## 接入人机验证（captcha）
 
 Signet 默认不带 captcha，但加进去很简单。推荐 Cloudflare Turnstile——
 免费、隐私友好、不需要追踪。
 
-后端
+### 后端
 
 加一个验证辅助函数：
 
@@ -152,7 +152,7 @@ export async function register(request, env) {
 }
 ```
 
-前端
+### 前端
 
 在 register.html 里加 Turnstile 的脚本和小组件：
 
@@ -173,7 +173,7 @@ const captchaToken = document.querySelector('[name="cf-turnstile-response"]').va
 await AuthAPI.register({ email, nickname, password, captchaToken });
 ```
 
-其他方案
+### 其他方案
 
 · Google reCAPTCHA v3 —— 同样的模式，换个 endpoint
 · 极验 —— 在中国大陆表现好，真实流量下需要付费
@@ -182,7 +182,7 @@ await AuthAPI.register({ email, nickname, password, captchaToken });
 
 ---
 
-换牌
+## 换牌
 
 要把 Signet 改成你自己的产品名，编辑每个 HTML 里的 window.SIGNET_CONFIG。
 完整字段清单见 收尾工作。
@@ -191,7 +191,7 @@ await AuthAPI.register({ email, nickname, password, captchaToken });
 
 如果改 11 个 HTML 文件太烦，把配置抽出来：
 
-1. 新建 frontend/assets/config.js：
+### 1. 新建 frontend/assets/config.js：
 
 ```javascript
 window.SIGNET_CONFIG = {
@@ -201,25 +201,25 @@ window.SIGNET_CONFIG = {
 };
 ```
 
-2. 把每个 HTML 里的内联配置块换成：
+### 2. 把每个 HTML 里的内联配置块换成：
 
 ```html
 <script src="/assets/config.js"></script>
 ```
 
-3. 放在 auth.js 之前加载。
+### 3. 放在 auth.js 之前加载。
 
 以后换牌就只需要改一个文件。
 
 ---
 
-接入邮件（密码重置）
+## 接入邮件（密码重置）
 
 Signet 有意不带邮件支持。如果你想要用户自助重置密码，需要自己接一个服务商。
 
 推荐：Resend（API 简洁、免费额度慷慨）。
 
-1. 加一条路由：
+### 1. 加一条路由：
 
 ```javascript
 if (method === 'POST' && path === '/api/auth/forgot-password') {
@@ -227,7 +227,7 @@ if (method === 'POST' && path === '/api/auth/forgot-password') {
 }
 ```
 
-2. 在 auth.js 里实现：
+### 2. 在 auth.js 里实现：
 
 ```javascript
 export async function forgotPassword(request, env) {
@@ -248,7 +248,7 @@ export async function forgotPassword(request, env) {
 }
 ```
 
-3. 用 Resend 的 API 实现 sendResetEmail。
+### 3. 用 Resend 的 API 实现 sendResetEmail。
 
 你还需要在 wrangler.toml 里加一个 KV 绑定。
 
@@ -256,12 +256,12 @@ export async function forgotPassword(request, env) {
 
 ---
 
-XSS 加固
+## XSS 加固
 
 Signet 对所有动态内容都用了 escapeHtml() 和 escapeAttr()。
 如果你要扩展前端，遵守这几条规则。
 
-规则 1 —— 优先用 textContent 而不是 innerHTML
+### 规则 1 —— 优先用 textContent 而不是 innerHTML
 
 ```javascript
 // ✅ 安全
@@ -271,7 +271,7 @@ element.textContent = user.nickname;
 element.innerHTML = user.nickname;
 ```
 
-规则 2 —— 绝不用字符串拼接构建事件处理器
+### 规则 2 —— 绝不用字符串拼接构建事件处理器
 
 ```html
 <!-- ❌ 危险 -->
@@ -289,7 +289,7 @@ document.addEventListener('click', (e) => {
 });
 ```
 
-规则 3 —— 注入 href 前先验证 URL
+### 规则 3 —— 注入 href 前先验证 URL
 
 ```javascript
 function safeUrl(url) {
@@ -300,7 +300,7 @@ function safeUrl(url) {
 
 这会拦住 javascript: 和 data: 之类的 URL。
 
-规则 4 —— 加 CSP 响应头
+### 规则 4 —— 加 CSP 响应头
 
 在 frontend/_headers 里：
 
