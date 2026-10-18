@@ -90,9 +90,13 @@ npx wrangler d1 execute signet-db --file=./schema.sql --remote
 This creates five tables:
 
 · users — account data
+
 · orders — payment orders
+
 · products — user-created products
+
 · licenses — issuance records
+
 · audit_log — admin action history
 
 Verify:
@@ -208,14 +212,24 @@ The files to update:
 
 · frontend/index.html
 · frontend/login.html
+
+
 · frontend/register.html
+
 · frontend/dashboard.html
+
 · frontend/bind.html
+
 · frontend/verify.html
+
 · frontend/admin.html
+
 · frontend/buy.html
+
 · frontend/terms.html
+
 · frontend/privacy.html
+
 · frontend/404.html
 
 Commit and push. Cloudflare Pages will redeploy automatically — usually within
