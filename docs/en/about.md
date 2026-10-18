@@ -1,4 +1,4 @@
- # About Signet
+# About Signet
 
 ## What it is
 
