@@ -1,4 +1,4 @@
- # 配置 Cloudflare Workers
+# 配置 Cloudflare Workers
 
 Worker 是 Signet 的后端。它负责用户账号、订单绑定、授权签发和管理后台 API。
 和传统服务器不同，它跑在边缘——没有虚拟机，没有容器，没有月租。
@@ -24,7 +24,7 @@ npm install
 这会拉取 wrangler（Cloudflare 的 CLI）和 @noble/ed25519（用于签名）。
 没有其他依赖。
 
-第二步 —— 登录 Cloudflare
+## 第二步 —— 登录 Cloudflare
 
 ```bash
 npx wrangler login
@@ -33,7 +33,7 @@ npx wrangler login
 这会打开浏览器标签页。授权 wrangler 访问你的 Cloudflare 账号。
 完成后终端会提示成功。
 
-第三步 —— 创建 D1 数据库
+## 第三步 —— 创建 D1 数据库
 
 ```bash
 npx wrangler d1 create signet-db
@@ -52,7 +52,7 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 把 database_id 复制下来，下一步要用。
 
-第四步 —— 编辑 wrangler.toml
+## 第四步 —— 编辑 wrangler.toml
 
 打开 backend/wrangler.toml，找到这一段：
 
@@ -78,7 +78,7 @@ ALLOWED_ORIGIN = "https://example.com"
 多个来源： 这里可以填多个用逗号分隔的地址：
 "https://signet-frontend.pages.dev,https://你的域名.com"。过渡期很有用。
 
-第五步 —— 初始化数据库表结构
+## 第五步 —— 初始化数据库表结构
 
 ```bash
 npx wrangler d1 execute signet-db --file=./schema.sql --remote
@@ -102,7 +102,7 @@ npx wrangler d1 execute signet-db \
 
 应该能看到这五张表以及 _cf_KV。
 
-第六步 —— 生成密钥
+## 第六步 —— 生成密钥
 
 在 backend/ 下依次执行这三条：
 
@@ -119,7 +119,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 每条命令都会输出值。在继续之前，把所有值保存到密码管理器或离线笔记里。
 
-第七步 —— 推送密钥到 Cloudflare
+## 第七步 —— 推送密钥到 Cloudflare
 
 逐条执行，每条会提示你粘贴值：
 
@@ -136,18 +136,25 @@ npx wrangler secret put LICENSE_SIGN_PUBLIC_KEY
 对应关系：
 
 密钥 来源
+
 JWT_SECRET 上面 node -e ... 生成的十六进制字符串
+
 ADMIN_USERNAME 你想要的登录名
+
 ADMIN_PASSWORD_HASH gen:admin-pwd 的输出
+
 ADMIN_PASSWORD_SALT gen:admin-pwd 的输出
+
 ADMIN_JWT_SECRET 另一个不同的十六进制字符串 —— 重新生成一次
+
 LICENSE_SIGN_PRIVATE_KEY gen:keys 的输出
+
 LICENSE_SIGN_PUBLIC_KEY gen:keys 的输出
 
 关于密钥： Cloudflare 会在静态存储时加密密钥，但任何能访问你账号的人都能读取。
 请像对待 SSH 私钥一样对待它们。
 
-第八步 —— 部署
+## 第八步 —— 部署
 
 ```bash
 npx wrangler deploy
@@ -163,7 +170,7 @@ Deployed signet-backend triggers (0.13 sec)
 
 把 .workers.dev 地址复制下来，马上要用。
 
-第九步 —— 测试 Worker
+## 第九步 —— 测试 Worker
 
 ```bash
 curl https://signet-backend.<你的账号>.workers.dev/
@@ -177,7 +184,7 @@ curl https://signet-backend.<你的账号>.workers.dev/
 
 看到这个就说明 Worker 已上线，D1 绑定正常。
 
-第十步 —— 让前端指向后端
+## 第十步 —— 让前端指向后端
 
 现在编辑前端文件，指向 Worker 地址。所有带下面这段配置的 HTML 都要改：
 
@@ -208,7 +215,7 @@ curl https://signet-backend.<你的账号>.workers.dev/
 
 提交并推送。Cloudflare Pages 会自动重新部署，通常 30 秒内完成。
 
-常见问题排查
+## 常见问题排查
 
 Cannot find module 'wrangler'
 你漏了在 backend/ 里执行 npm install。补上。
@@ -222,7 +229,7 @@ ID 必须逐字复制。不能有空格、引号，注意结尾换行符。
 Worker 每个请求都返回 500
 在另一个终端执行 wrangler tail 看实时日志。缺 secret 会在这里暴露出来。
 
-下一步
+## 下一步
 
 数据库部署好了，但还是空的。是时候初始化它的结构了。
 
