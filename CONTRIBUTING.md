@@ -1,6 +1,6 @@
 # Contributing to Signet
 
-**[English](../CONTRIBUTING.md)** | [简体中文](./zh/CONTRIBUTING.md)
+**[English](./CONTRIBUTING.md)** | [简体中文](./zh/CONTRIBUTING.md)
 
 ---
 
@@ -95,4 +95,4 @@ Always verify webhook signatures in payment adapters.
 If you discover a security vulnerability, do not open a public issue. Please report it privately as described in our [SECURITY.md](../SECURITY.md).
 
 ## License
-By contributing to Signet, you agree that your contributions will be licensed under the [Apache License 2.0](../LICENSE).
+By contributing to Signet, you agree that your contributions will be licensed under the [Apache License 2.0](./LICENSE).
