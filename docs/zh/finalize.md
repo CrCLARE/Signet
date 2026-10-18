@@ -75,7 +75,7 @@ cd backend
 npx wrangler deploy
 ```
 
-第六步 —— 更新前端的 apiBase
+## 第六步 —— 更新前端的 apiBase
 
 在前端 HTML 文件里，把 apiBase 改掉：
 
@@ -88,7 +88,7 @@ window.SIGNET_CONFIG = {
 
 提交并推送。Pages 会自动重新部署。
 
-第七步 —— 更新爱发电的 Webhook URL
+## 第七步 —— 更新爱发电的 Webhook URL
 
 如果你配了爱发电，去爱发电后台更新 webhook URL：
 
@@ -96,7 +96,7 @@ window.SIGNET_CONFIG = {
 https://api.your-domain.com/api/webhook/afdian
 ```
 
-第八步 —— 启用 HSTS（可选，推荐）
+## 第八步 —— 启用 HSTS（可选，推荐）
 
 HSTS 会强制所有后续连接走 HTTPS。一旦启用，浏览器会在 max-age 时间内记住这一点
 ——所以启用前先确认你的域名已经能正常走 HTTPS。
@@ -109,7 +109,7 @@ HSTS 会强制所有后续连接走 HTTPS。一旦启用，浏览器会在 max-a
 4. max-age 先设小一点（比如 86400 = 1 天）
 5. 确认没问题后，再调大到一年（31536000）
 
-第九步 —— 换牌
+## 第九步 —— 换牌
 
 Signet 默认用自己名字和 logo。要变成你自己的，编辑每个 HTML 文件里的
 window.SIGNET_CONFIG：
@@ -147,7 +147,7 @@ window.SIGNET_CONFIG = {
 frontend/assets/config.js 里，每个页面引入它。这是个不错的重构，
 但不是首次部署必须的。
 
-第十步 —— 更新法务页面
+## 第十步 —— 更新法务页面
 
 上线前，务必编辑这两个文件：
 
@@ -168,7 +168,7 @@ privacy.html —— 更新：
 别跳过这一步。 用户会看这些页面。法务主体写 "Example Company" 会严重
 侵蚀信任。
 
-第十一步 —— 测试生产域名
+## 第十一步 —— 测试生产域名
 
 访问你的自定义域名，完整走一遍流程：
 
@@ -181,9 +181,9 @@ privacy.html —— 更新：
 
 所有步骤通过，就完工了。
 
-日常维护
+## 日常维护
 
-看日志
+### 看日志
 
 ```bash
 cd backend
@@ -192,11 +192,11 @@ npx wrangler tail
 
 实时输出日志。排查生产问题时很有用。
 
-更新密钥
+### 更新密钥
 
 任何密钥都可以之后用 `npx wrangler secret put <NAME>` 更新。
 
-拉上游更新
+### 拉上游更新
 
 ```bash
 git fetch upstream
@@ -206,7 +206,7 @@ git merge upstream/main
 只有在审阅过改动之后才合并。Signet 不严格遵循语义化版本号——
 次版本可能包含行为变化。
 
-定期备份
+### 定期备份
 
 ```bash
 npx wrangler d1 export signet-db --output=backup-$(date +%Y%m%d).sql --remote
@@ -214,7 +214,7 @@ npx wrangler d1 export signet-db --output=backup-$(date +%Y%m%d).sql --remote
 
 可以考虑用 GitHub Action 或 cron 定时跑。
 
-完成
+## 完成
 
 Signet 已经完整部署、换好牌、跑在你自己的域名上了。
 恭喜。
