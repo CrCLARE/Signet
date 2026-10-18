@@ -1,4 +1,4 @@
- # 配置 Cloudflare Pages
+# 配置 Cloudflare Pages
 
 Cloudflare Pages 负责托管前端——也就是用户实际看到的那些静态 HTML、CSS 和 JavaScript。
 它免费、快，而且可以直接连接你 Fork 的 GitHub 仓库。
