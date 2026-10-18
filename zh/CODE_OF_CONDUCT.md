@@ -1,6 +1,6 @@
 # 贡献者公约行为准则
 
-[English](../CODE_OF_CONDUCT.md) | **[简体中文](./zh/CODE_OF_CONDUCT.md)**
+[English](./CODE_OF_CONDUCT.md) | **[简体中文](./zh/CODE_OF_CONDUCT.md)**
 
 ---
 
