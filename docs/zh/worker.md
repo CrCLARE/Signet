@@ -87,9 +87,13 @@ npx wrangler d1 execute signet-db --file=./schema.sql --remote
 这会创建五张表：
 
 · users —— 账号数据
+
 · orders —— 支付订单
+
 · products —— 用户创建的产品
+
 · licenses —— 签发记录
+
 · audit_log —— 管理员操作历史
 
 验证：
@@ -202,15 +206,25 @@ curl https://signet-backend.<你的账号>.workers.dev/
 需要修改的文件：
 
 · frontend/index.html
+
 · frontend/login.html
+
 · frontend/register.html
+
 · frontend/dashboard.html
+
 · frontend/bind.html
+
 · frontend/verify.html
+
 · frontend/admin.html
+
 · frontend/buy.html
+
 · frontend/terms.html
+
 · frontend/privacy.html
+
 · frontend/404.html
 
 提交并推送。Cloudflare Pages 会自动重新部署，通常 30 秒内完成。
