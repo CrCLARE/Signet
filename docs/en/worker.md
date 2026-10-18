@@ -25,7 +25,7 @@ npm install
 This pulls in wrangler (Cloudflare's CLI) and @noble/ed25519 (for signing).
 No other dependencies.
 
-Step 2 — Sign in to Cloudflare
+## Step 2 — Sign in to Cloudflare
 
 ```bash
 npx wrangler login
@@ -34,7 +34,7 @@ npx wrangler login
 This opens a browser tab. Authorize wrangler to access your Cloudflare account.
 Once done, the terminal will report success.
 
-Step 3 — Create a D1 database
+## Step 3 — Create a D1 database
 
 ```bash
 npx wrangler d1 create signet-db
@@ -53,7 +53,7 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 Copy the database_id. You'll need it in the next step.
 
-Step 4 — Edit wrangler.toml
+## Step 4 — Edit wrangler.toml
 
 Open backend/wrangler.toml and find this block:
 
@@ -81,7 +81,7 @@ Multiple origins: You can list several comma-separated URLs here:
 "https://signet-frontend.pages.dev,https://your-domain.com". Useful during
 the transition to a custom domain.
 
-Step 5 — Initialize the database schema
+## Step 5 — Initialize the database schema
 
 ```bash
 npx wrangler d1 execute signet-db --file=./schema.sql --remote
@@ -105,7 +105,7 @@ npx wrangler d1 execute signet-db \
 
 You should see all five plus _cf_KV.
 
-Step 6 — Generate secrets
+## Step 6 — Generate secrets
 
 Run these three commands in backend/:
 
@@ -123,7 +123,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 Each command prints values. Save them all to a password manager or a secure
 offline note before continuing.
 
-Step 7 — Push secrets to Cloudflare
+## Step 7 — Push secrets to Cloudflare
 
 Run these one by one. Each will prompt you to paste a value.
 
@@ -140,18 +140,25 @@ npx wrangler secret put LICENSE_SIGN_PUBLIC_KEY
 Value mapping:
 
 Secret Where it comes from
+
 JWT_SECRET The hex string from node -e ... above
+
 ADMIN_USERNAME Whatever login name you want
+
 ADMIN_PASSWORD_HASH gen:admin-pwd output
+
 ADMIN_PASSWORD_SALT gen:admin-pwd output
+
 ADMIN_JWT_SECRET A second, different hex string — generate again
+
 LICENSE_SIGN_PRIVATE_KEY gen:keys output
+
 LICENSE_SIGN_PUBLIC_KEY gen:keys output
 
 A note on secrets: Cloudflare encrypts secrets at rest, but they can be
 read by anyone with access to your account. Treat them like SSH keys.
 
-Step 8 — Deploy
+## Step 8 — Deploy
 
 ```bash
 npx wrangler deploy
@@ -167,7 +174,7 @@ Deployed signet-backend triggers (0.13 sec)
 
 Copy the .workers.dev URL. You'll need it shortly.
 
-Step 9 — Test the Worker
+## Step 9 — Test the Worker
 
 ```bash
 curl https://signet-backend.<your-account>.workers.dev/
@@ -181,7 +188,7 @@ Expected response:
 
 If you get this, the Worker is live and the D1 binding works.
 
-Step 10 — Point the frontend at the backend
+## Step 10 — Point the frontend at the backend
 
 Now edit your frontend files to point at the Worker URL. Every HTML file that
 contains this block needs updating:
@@ -214,7 +221,7 @@ The files to update:
 Commit and push. Cloudflare Pages will redeploy automatically — usually within
 30 seconds.
 
-Troubleshooting
+## Troubleshooting
 
 Cannot find module 'wrangler'
 You skipped npm install in backend/. Run it.
@@ -230,7 +237,7 @@ Worker returns 500 on every request
 Check wrangler tail in a second terminal for live logs. A missing secret will
 show up here.
 
-What's next
+## What's next
 
 The database is deployed but empty. Time to initialize its structure.
 
