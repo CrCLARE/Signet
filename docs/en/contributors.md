@@ -1,4 +1,4 @@
- # Contributors
+# Contributors
 
 Signet is built and maintained by a small team at CrCLARE Studio.
 
