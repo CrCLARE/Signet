@@ -1,4 +1,4 @@
- # 关于 Signet
+# 关于 Signet
 
 ## 它是什么
 
