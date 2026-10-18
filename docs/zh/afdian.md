@@ -37,7 +37,7 @@ npx wrangler secret put AFDIAN_TOKEN
 
 按提示粘贴对应的值。
 
-第四步 —— 配置 Webhook URL
+## 第四步 —— 配置 Webhook URL
 
 在爱发电开发者后台，找到 Webhook URL 字段，填入：
 
@@ -47,9 +47,9 @@ https://signet-backend.<你的账号>.workers.dev/api/webhook/afdian
 
 把 <你的账号> 替换成你实际的 Cloudflare Workers 子域名。
 
-点 发送测试。后台应该提示成功。
+点 发送测试。后台应该提示成功或无错误提示。
 
-第五步 —— 验证测试
+## 第五步 —— 验证测试
 
 打开另一个终端运行：
 
@@ -69,7 +69,7 @@ npx wrangler tail
 
 如果看到 500 错误，说明两个密钥里有配错的。
 
-第六步 —— 在爱发电创建方案
+## 第六步 —— 在爱发电创建方案
 
 在用户能买东西之前，你需要在爱发电创建一个方案：
 
@@ -81,7 +81,7 @@ npx wrangler tail
 Signet 默认模板里，Pro 方案定价 ¥19.90。如果你改价，记得同步修改
 backend/src/adapters/afdian.js 里的金额校验。
 
-第七步 —— 测试真实购买
+## 第七步 —— 测试真实购买
 
 验证一切正常的最好方式，就是真的买一次自己的商品：
 
@@ -104,7 +104,7 @@ npx wrangler d1 execute signet-db \
   --remote
 ```
 
-适配器如何工作
+# 适配器如何工作
 
 爱发电适配器干两件事：
 
@@ -129,7 +129,7 @@ npx wrangler d1 execute signet-db \
 
 这意味着即使 webhook 不可靠，绑定流程也能正常工作。
 
-签名验证
+# 签名验证
 
 爱发电使用 RSA-SHA256 作为 webhook 签名算法。公钥已内置在适配器里
 （AFDIAN_PUBLIC_KEY）。验证签名时，适配器会：
@@ -140,7 +140,7 @@ npx wrangler d1 execute signet-db \
 验证失败时，webhook 会被记录并忽略。无论如何都返回 HTTP 200——
 爱发电在非 200 响应时会重试，而无效签名你不希望它重试。
 
-常见问题
+# 常见问题
 
 Webhook 从来不触发
 确认爱发电后台里的 URL 完全正确，包括结尾的 /afdian。爱发电不会报 URL 错误。
@@ -158,7 +158,7 @@ npx wrangler d1 execute signet-db \
 订单金额和预期的 19.90 不符。如果你改了定价，更新
 backend/src/adapters/afdian.js 里的 PRO_PRICE 常量。
 
-下一步
+# 下一步
 
 核心流程已经部署好并能跑通。现在用自定义域名美化一下。
 
