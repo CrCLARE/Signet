@@ -46,7 +46,7 @@ export default {
 };
 ```
 
-2. Register it
+### 2. Register it
 
 Edit backend/src/adapters/index.js:
 
@@ -60,14 +60,14 @@ const registry = {
 };
 ```
 
-3. Configure secrets
+### 3. Configure secrets
 
 ```bash
 npx wrangler secret put STRIPE_SECRET_KEY
 npx wrangler secret put STRIPE_WEBHOOK_SECRET
 ```
 
-4. Deploy
+### 4. Deploy
 
 ```bash
 npx wrangler deploy
@@ -89,7 +89,7 @@ Key rules for adapters
 
 ---
 
-Customizing the license format
+## Customizing the license format
 
 The default license is a JSON object:
 
@@ -120,12 +120,12 @@ licenses will continue to verify as long as your client supports both versions.
 
 ---
 
-Adding human verification (captcha)
+## Adding human verification (captcha)
 
 Signet doesn't ship with captcha, but it's easy to add. We recommend
 Cloudflare Turnstile — free, privacy-friendly, and it works without tracking.
 
-Backend
+### Backend
 
 Add a verification helper:
 
@@ -158,7 +158,7 @@ export async function register(request, env) {
 }
 ```
 
-Frontend
+### Frontend
 
 Add Turnstile's script and widget to register.html:
 
@@ -179,7 +179,7 @@ const captchaToken = document.querySelector('[name="cf-turnstile-response"]').va
 await AuthAPI.register({ email, nickname, password, captchaToken });
 ```
 
-Other providers
+### Other providers
 
 · Google reCAPTCHA v3 — same pattern, different endpoint
 · Geetest — works well in mainland China, requires paid plan for real traffic
@@ -189,7 +189,7 @@ plan to support more than one.
 
 ---
 
-Rebrading
+## Rebrading
 
 To rename Signet to your own product, edit window.SIGNET_CONFIG in every HTML
 file. See the finalize chapter for the full list of
@@ -199,7 +199,7 @@ Extracting config to a single file
 
 If editing 11 HTML files is tedious, extract the config:
 
-1. Create frontend/assets/config.js:
+### 1. Create frontend/assets/config.js:
 
 ```javascript
 window.SIGNET_CONFIG = {
@@ -209,26 +209,26 @@ window.SIGNET_CONFIG = {
 };
 ```
 
-2. Replace the inline config block in every HTML file with:
+### 2. Replace the inline config block in every HTML file with:
 
 ```html
 <script src="/assets/config.js"></script>
 ```
 
-3. Load it before auth.js.
+### 3. Load it before auth.js.
 
 This makes future rebranding a one-file change.
 
 ---
 
-Adding email (password reset)
+## Adding email (password reset)
 
 Signet deliberately ships without email support. If you want self-service password
 reset, you'll need to integrate a provider.
 
 Recommended: Resend (simple API, generous free tier).
 
-1. Add a route:
+### 1. Add a route:
 
 ```javascript
 if (method === 'POST' && path === '/api/auth/forgot-password') {
@@ -236,7 +236,7 @@ if (method === 'POST' && path === '/api/auth/forgot-password') {
 }
 ```
 
-2. Implement it in auth.js:
+### 2. Implement it in auth.js:
 
 ```javascript
 export async function forgotPassword(request, env) {
@@ -257,7 +257,7 @@ export async function forgotPassword(request, env) {
 }
 ```
 
-3. Implement sendResetEmail using Resend's API.
+### 3. Implement sendResetEmail using Resend's API.
 
 You'll also need to add a KV binding to wrangler.toml.
 
@@ -266,12 +266,12 @@ exists. Otherwise attackers can enumerate registered accounts.
 
 ---
 
-XSS hardening
+## XSS hardening
 
 Signet uses escapeHtml() and escapeAttr() on all dynamic content. If you
 extend the frontend, follow these rules.
 
-Rule 1 — Prefer textContent over innerHTML
+### Rule 1 — Prefer textContent over innerHTML
 
 ```javascript
 // ✅ Safe
@@ -281,7 +281,7 @@ element.textContent = user.nickname;
 element.innerHTML = user.nickname;
 ```
 
-Rule 2 — Never build event handlers with string concatenation
+### Rule 2 — Never build event handlers with string concatenation
 
 ```html
 <!-- ❌ Dangerous -->
@@ -299,7 +299,7 @@ document.addEventListener('click', (e) => {
 });
 ```
 
-Rule 3 — Validate URLs before injecting them into href
+### Rule 3 — Validate URLs before injecting them into href
 
 ```javascript
 function safeUrl(url) {
@@ -310,7 +310,7 @@ function safeUrl(url) {
 
 This blocks javascript: and data: URLs.
 
-Rule 4 — Add a CSP header
+### Rule 4 — Add a CSP header
 
 In frontend/_headers:
 
