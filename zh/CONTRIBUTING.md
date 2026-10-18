@@ -1,6 +1,6 @@
 # 参与 Signet 贡献
 
-[English](../CONTRIBUTING.md) | **[简体中文](./zh/CONTRIBUTING.md)**
+[English](./CONTRIBUTING.md) | **[简体中文](./zh/CONTRIBUTING.md)**
 
 ---
 
