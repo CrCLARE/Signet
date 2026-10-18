@@ -1,6 +1,6 @@
 # Contributor Covenant Code of Conduct
 
-**[English](../CODE_OF_CONDUCT.md)** | [简体中文](./zh/CODE_OF_CONDUCT.md)
+**[English](./CODE_OF_CONDUCT.md)** | [简体中文](./zh/CODE_OF_CONDUCT.md)
 
 ---
 
