@@ -1,4 +1,4 @@
- # Configure Afdian
+# Configure Afdian
 
 Afdian is a Chinese payment platform for creators. Signet ships with a built-in
 adapter for it.
@@ -40,7 +40,7 @@ npx wrangler secret put AFDIAN_TOKEN
 
 Paste the corresponding values when prompted.
 
-Step 4 — Configure the webhook URL
+## Step 4 — Configure the webhook URL
 
 In the Afdian developer dashboard, find the Webhook URL field. Set it to:
 
@@ -52,7 +52,7 @@ Replace <your-account> with your actual Cloudflare Workers subdomain.
 
 Click Send test. The dashboard should report success.
 
-Step 5 — Verify the test
+## Step 5 — Verify the test
 
 Open a second terminal and run:
 
@@ -74,7 +74,7 @@ Signet correctly identifies it as a test and ignores it.
 
 If you see a 500 error instead, one of the two secrets is misconfigured.
 
-Step 6 — Create a product on Afdian
+## Step 6 — Create a product on Afdian
 
 Before users can buy anything, you need to create a product on Afdian:
 
@@ -86,7 +86,7 @@ Before users can buy anything, you need to create a product on Afdian:
 For Signet's default template, the Pro plan is priced at ¥19.90. If you
 change the price, remember to update the amount check in backend/src/adapters/afdian.js.
 
-Step 7 — Test a real purchase
+## Step 7 — Test a real purchase
 
 The best way to verify everything works is to actually buy your own product:
 
@@ -109,7 +109,7 @@ npx wrangler d1 execute signet-db \
   --remote
 ```
 
-How the adapter works
+# How the adapter works
 
 The Afdian adapter has two jobs:
 
@@ -137,7 +137,7 @@ directly:
 
 This means the binding flow works even if webhooks are unreliable.
 
-Signature verification
+# Signature verification
 
 Afdian uses RSA-SHA256 for webhook signatures. The public key is embedded in
 the adapter (AFDIAN_PUBLIC_KEY). To verify a signature, the adapter:
@@ -149,7 +149,7 @@ If verification fails, the webhook is logged and ignored. Return HTTP 200
 regardless — Afdian will retry on non-200 responses, and you don't want retries
 for invalid signatures.
 
-Common issues
+# Common issues
 
 Webhook never fires
 Make sure the URL in the Afdian dashboard is exactly right, including the /afdian
@@ -168,7 +168,7 @@ amount mismatch in logs
 The order amount doesn't match the expected 19.90. Update the PRO_PRICE
 constant in backend/src/adapters/afdian.js if you changed your pricing.
 
-What's next
+# What's next
 
 The core flow is deployed and working. Now polish it with a custom domain.
 
