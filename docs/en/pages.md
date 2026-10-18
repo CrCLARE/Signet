@@ -1,4 +1,4 @@
- # Configure Cloudflare Pages
+# Configure Cloudflare Pages
 
 Cloudflare Pages hosts the frontend — the static HTML, CSS, and JavaScript that
 your users actually see. It's free, fast, and connects directly to your GitHub fork.
