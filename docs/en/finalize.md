@@ -1,4 +1,4 @@
- # Finishing touches
+# Finishing touches
 
 You've deployed everything. The last step is connecting your own domain to
 make the deployment look professional.
@@ -80,7 +80,7 @@ cd backend
 npx wrangler deploy
 ```
 
-Step 6 — Update the frontend's apiBase
+## Step 6 — Update the frontend's apiBase
 
 In your frontend HTML files, update the apiBase:
 
@@ -93,7 +93,7 @@ window.SIGNET_CONFIG = {
 
 Commit and push. Pages will redeploy automatically.
 
-Step 7 — Update the Afdian webhook URL
+## Step 7 — Update the Afdian webhook URL
 
 If you configured Afdian, update the webhook URL in the Afdian dashboard:
 
@@ -101,7 +101,7 @@ If you configured Afdian, update the webhook URL in the Afdian dashboard:
 https://api.your-domain.com/api/webhook/afdian
 ```
 
-Step 8 — Enable HSTS (optional, recommended)
+## Step 8 — Enable HSTS (optional, recommended)
 
 HSTS forces all future connections to use HTTPS. Once enabled, browsers will
 remember this for the duration of the max-age — so make sure your domain
@@ -115,7 +115,7 @@ In Cloudflare:
 4. Set max-age to something conservative at first (e.g. 86400 = 1 day)
 5. Once you're confident, increase it to a year (31536000)
 
-Step 9 — Rebrand
+## Step 9 — Rebrand
 
 Signet's default look uses its own name and logo. To make it yours, edit
 window.SIGNET_CONFIG in every HTML file:
@@ -153,7 +153,7 @@ Shortcut: If you want to avoid editing 11 files, extract the config block
 into a separate frontend/assets/config.js and load it in each page. This
 is a good refactor but not required for the initial deployment.
 
-Step 10 — Update your legal pages
+## Step 10 — Update your legal pages
 
 Before going live, edit these two files:
 
@@ -175,7 +175,7 @@ privacy.html — update:
 Don't skip this. Users see these pages. Having "Example Company" as your
 legal entity will erode trust.
 
-Step 11 — Test the production domain
+## Step 11 — Test the production domain
 
 Visit your custom domain and walk through the whole flow:
 
@@ -188,9 +188,9 @@ Visit your custom domain and walk through the whole flow:
 
 If all steps pass, you're done.
 
-Ongoing maintenance
+## Ongoing maintenance
 
-Checking logs
+### Checking logs
 
 ```bash
 cd backend
@@ -199,11 +199,11 @@ npx wrangler tail
 
 Streams live logs. Useful when debugging production issues.
 
-Updating secrets
+### Updating secrets
 
 Any secret can be updated later with npx wrangler secret put <NAME>.
 
-Pulling upstream updates
+### Pulling upstream updates
 
 ```bash
 git fetch upstream
@@ -213,7 +213,7 @@ git merge upstream/main
 Only merge if you've reviewed the changes. Signet doesn't follow semantic
 versioning strictly — minor versions may include behavioral changes.
 
-Regular backups
+### Regular backups
 
 ```bash
 npx wrangler d1 export signet-db --output=backup-$(date +%Y%m%d).sql --remote
@@ -221,11 +221,10 @@ npx wrangler d1 export signet-db --output=backup-$(date +%Y%m%d).sql --remote
 
 Consider scheduling this via a GitHub Action or a cron job.
 
-You're done
+## You're done
 
 Signet is now fully deployed, branded, and running on your own domain.
 Congratulations.
 
 If you run into issues, see the FAQ or open a discussion on
 GitHub.
-
