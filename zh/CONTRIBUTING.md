@@ -95,4 +95,4 @@ chore: 构建过程或辅助工具的变动
 如果你发现了安全漏洞，不要公开提 Issue。请按照 [SECURITY.md](./zh/SECURITY.md) 中的说明私下报告。
 
 ## 许可
-向 Signet 贡献代码即表示你同意你的贡献将按照 [Apache License 2.0](license/) 协议进行授权。
+向 Signet 贡献代码即表示你同意你的贡献将按照 [Apache License 2.0](./license/) 协议进行授权。
