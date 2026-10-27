@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -416,20 +416,28 @@
     // ============================================================
     // Utilities
     // ============================================================
+    
+    // Escape HTML entities to prevent XSS
     function escapeHtml(s) {
       return String(s ?? '').replace(/[&<>"']/g, m => ({
-        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
       }[m]));
     }
+    
+    // Escape attribute values for data-* attributes
     function escapeAttr(s) {
-      return String(s ?? '').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+      return String(s ?? '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
+
+    // Fix 1970 bug: ensure the timestamp is parsed as milliseconds
     function formatTime(ts) {
       if (!ts) return '—';
-      const d = new Date(ts);
+      const ms = ts < 10000000000 ? ts * 1000 : ts; 
+      const d = new Date(ms);
       const p = n => String(n).padStart(2, '0');
       return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
     }
+
     function copyText(text, btn) {
       const original = btn.innerHTML;
       const done = () => {
@@ -455,7 +463,6 @@
         document.body.removeChild(ta);
       }
     }
-    window.copyText = copyText;
 
     // ============================================================
     // Login / logout
@@ -584,7 +591,7 @@
         const uidHtml = `
           <div class="flex items-center gap-1.5">
             <span class="font-mono text-[11.5px] text-slate-400 max-w-[150px] truncate" title="${escapeAttr(uid)}">${escapeHtml(uid)}</span>
-            <button class="copy-btn" onclick="copyText('${escapeAttr(uid)}', this)" title="Copy User ID">
+            <button class="copy-btn" data-action="copy" data-copy-text="${escapeAttr(uid)}" title="Copy User ID">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                 <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
@@ -608,9 +615,9 @@
             <td>
               <div class="flex gap-2 flex-wrap">
                 ${r.banned
-                  ? `<button class="btn-success px-3 py-1 rounded-lg text-[12px]" onclick="unbanLicense('${r.license_id}')">Unban</button>`
-                  : `<button class="btn-danger px-3 py-1 rounded-lg text-[12px]" onclick="openBanModal('${r.license_id}', '${escapeAttr(r.product_name || '')}')">Ban</button>`}
-                <button class="btn-ghost px-3 py-1 rounded-lg text-[12px]" onclick="editNote('${r.license_id}', '${escapeAttr(r.note || '')}')">Note</button>
+                  ? `<button class="btn-success px-3 py-1 rounded-lg text-[12px]" data-action="unban" data-id="${r.license_id}">Unban</button>`
+                  : `<button class="btn-danger px-3 py-1 rounded-lg text-[12px]" data-action="ban" data-id="${r.license_id}" data-name="${escapeAttr(r.product_name || '')}">Ban</button>`}
+                <button class="btn-ghost px-3 py-1 rounded-lg text-[12px]" data-action="edit-note" data-id="${r.license_id}" data-note="${escapeAttr(r.note || '')}">Note</button>
               </div>
             </td>
           </tr>
@@ -620,7 +627,7 @@
       const totalPages = Math.ceil(data.total / data.per_page) || 1;
       const pag = [];
       for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-        pag.push(`<button class="${i === currentPage ? 'btn-primary' : 'btn-ghost'} px-3 py-1 rounded-lg" onclick="gotoPage(${i})">${i}</button>`);
+        pag.push(`<button class="${i === currentPage ? 'btn-primary' : 'btn-ghost'} px-3 py-1 rounded-lg" data-action="page" data-page="${i}">${i}</button>`);
       }
       document.getElementById('pagination').innerHTML = pag.join('');
     }
@@ -639,7 +646,7 @@
         const uidHtml = `
           <div class="flex items-center gap-1.5">
             <span class="font-mono text-[11.5px] text-slate-400 max-w-[150px] truncate" title="${escapeAttr(u.id)}">${escapeHtml(u.id)}</span>
-            <button class="copy-btn" onclick="copyText('${escapeAttr(u.id)}', this)" title="Copy User ID">
+            <button class="copy-btn" data-action="copy" data-copy-text="${escapeAttr(u.id)}" title="Copy User ID">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                 <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
@@ -660,11 +667,11 @@
             <td>
               <div class="flex gap-2 flex-wrap">
                 <button class="btn-primary px-3 py-1 rounded-lg text-[12px] font-semibold"
-                        onclick="quickGrant('${escapeAttr(u.id)}', '${escapeAttr(u.email)}')">
+                        data-action="grant" data-id="${escapeAttr(u.id)}" data-email="${escapeAttr(u.email)}">
                   Grant Pro
                 </button>
                 <button class="btn-danger px-3 py-1 rounded-lg text-[12px]"
-                        onclick="openResetPwd('${u.id}', '${escapeAttr(u.email)}', '${escapeAttr(u.nickname)}')">
+                        data-action="reset-pwd" data-id="${escapeAttr(u.id)}" data-email="${escapeAttr(u.email)}" data-nickname="${escapeAttr(u.nickname)}">
                   Reset password
                 </button>
               </div>
@@ -718,14 +725,66 @@
     }
 
     // ============================================================
+    // Event Delegation (Fixes XSS & removes inline onclick)
+    // ============================================================
+    
+    // Handle Licenses Table Actions
+    document.getElementById('licenseTable').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+
+      if (action === 'copy') {
+        copyText(btn.dataset.copyText, btn);
+      } else if (action === 'ban') {
+        openBanModal(id, btn.dataset.name);
+      } else if (action === 'unban') {
+        unbanLicense(id);
+      } else if (action === 'edit-note') {
+        editNote(id, btn.dataset.note);
+      }
+    });
+
+    // Handle Users Table Actions
+    document.getElementById('userTable').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+
+      if (action === 'copy') {
+        copyText(btn.dataset.copyText, btn);
+      } else if (action === 'grant') {
+        quickGrant(id, btn.dataset.email);
+      } else if (action === 'reset-pwd') {
+        openResetPwd(id, btn.dataset.email, btn.dataset.nickname);
+      }
+    });
+
+    // Handle Pagination Actions
+    document.getElementById('pagination').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action="page"]');
+      if (!btn) return;
+      gotoPage(parseInt(btn.dataset.page, 10));
+    });
+
+    // ============================================================
     // Search / pagination
     // ============================================================
-    document.getElementById('searchBtn').onclick = () => {
+    function doSearch() {
       currentQuery = document.getElementById('searchInput').value.trim();
       currentBanned = document.getElementById('bannedFilter').value;
       currentPage = 1;
       loadLicenses();
-    };
+    }
+
+    document.getElementById('searchBtn').onclick = doSearch;
+    document.getElementById('searchInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSearch();
+    });
 
     document.getElementById('userSearchBtn').onclick = () => {
       loadUsers();
@@ -739,7 +798,6 @@
       currentPage = p;
       loadLicenses();
     }
-    window.gotoPage = gotoPage;
 
     // ============================================================
     // Ban / unban
@@ -752,7 +810,6 @@
       document.getElementById('banModal').classList.remove('hidden');
       setTimeout(() => document.getElementById('banConfirmInput').focus(), 100);
     }
-    window.openBanModal = openBanModal;
 
     document.getElementById('banCancel').onclick = () => {
       document.getElementById('banModal').classList.add('hidden');
@@ -795,7 +852,6 @@
         alert('Unban failed: ' + (e.message || 'unknown error'));
       }
     }
-    window.unbanLicense = unbanLicense;
 
     // ============================================================
     // Edit note
@@ -810,7 +866,6 @@
         alert('Update failed: ' + (e.message || 'unknown error'));
       }
     }
-    window.editNote = editNote;
 
     // ============================================================
     // Grant Pro
@@ -854,7 +909,6 @@
         alert('Grant failed: ' + (e.message || 'unknown error'));
       }
     }
-    window.quickGrant = quickGrant;
 
     // ============================================================
     // Reset user password
@@ -866,7 +920,6 @@
       document.getElementById('resetPwdModal').classList.remove('hidden');
       setTimeout(() => document.getElementById('resetNewPwd').focus(), 100);
     }
-    window.openResetPwd = openResetPwd;
 
     document.getElementById('resetPwdCancel').onclick = () => {
       document.getElementById('resetPwdModal').classList.add('hidden');
@@ -905,11 +958,6 @@
         document.getElementById(id).classList.add('hidden');
       });
     });
-
-    // ============================================================
-    // Refresh button in top bar (optional)
-    // ============================================================
-    // (kept simple: reload happens via individual actions)
   </script>
 </body>
 </html>
