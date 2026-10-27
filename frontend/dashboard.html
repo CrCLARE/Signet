@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -370,17 +370,24 @@
     // ============================================================
     // Utilities
     // ============================================================
+    
+    // Escape HTML entities to prevent XSS
     function escapeHtml(s) {
       return String(s ?? '').replace(/[&<>"']/g, m => ({
-        '&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
       }[m]));
     }
+    
+    // Escape attribute values for data-* attributes
     function escapeAttr(s) {
-      return String(s ?? '').replace(/'/g, "&#39;").replace(/"/g, '&quot;');
+      return String(s ?? '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
+
+    // Fix 1970 bug: ensure the timestamp is parsed as milliseconds
     function formatDate(ts) {
       if (!ts) return '—';
-      const d = new Date(ts);
+      const ms = ts < 10000000000 ? ts * 1000 : ts;
+      const d = new Date(ms);
       const p = n => String(n).padStart(2, '0');
       return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
     }
@@ -459,7 +466,8 @@
                 <button
                   class="copy-btn"
                   title="Copy product ID"
-                  onclick="copyUid('${escapeAttr(p.product_uid)}', this)"
+                  data-action="copy-uid"
+                  data-uid="${escapeAttr(p.product_uid)}"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -472,19 +480,25 @@
             <div class="flex gap-2 flex-shrink-0 flex-wrap">
               <button
                 class="btn-ghost px-3 py-1.5 rounded-lg text-[13px]"
-                onclick="editProduct('${p.id}', '${escapeAttr(p.name)}')"
+                data-action="edit"
+                data-id="${escapeAttr(p.id)}"
+                data-name="${escapeAttr(p.name)}"
               >
                 Rename
               </button>
               <button
                 class="btn-danger px-3 py-1.5 rounded-lg text-[13px]"
-                onclick="openDelete('${p.id}', '${escapeAttr(p.name)}')"
+                data-action="delete"
+                data-id="${escapeAttr(p.id)}"
+                data-name="${escapeAttr(p.name)}"
               >
                 Delete
               </button>
               <button
                 class="btn-primary px-3 py-1.5 rounded-lg text-[13px] font-semibold"
-                onclick="downloadLicense('${p.id}', '${escapeAttr(p.product_uid)}')"
+                data-action="download"
+                data-id="${escapeAttr(p.id)}"
+                data-uid="${escapeAttr(p.product_uid)}"
               >
                 Download license
               </button>
@@ -493,6 +507,26 @@
         </div>
       `).join('');
     }
+
+    // ============================================================
+    // Event Delegation for Product List (Fixes XSS)
+    // ============================================================
+    productListEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+
+      const action = btn.dataset.action;
+
+      if (action === 'copy-uid') {
+        copyUid(btn.dataset.uid, btn);
+      } else if (action === 'edit') {
+        editProduct(btn.dataset.id, btn.dataset.name);
+      } else if (action === 'delete') {
+        openDelete(btn.dataset.id, btn.dataset.name);
+      } else if (action === 'download') {
+        downloadLicense(btn.dataset.id, btn.dataset.uid);
+      }
+    });
 
     // ============================================================
     // Copy product UID
@@ -523,7 +557,6 @@
         document.body.removeChild(ta);
       }
     }
-    window.copyUid = copyUid;
 
     // ============================================================
     // Create product
@@ -583,7 +616,6 @@
       editModal.classList.remove('hidden');
       setTimeout(() => document.getElementById('editNameInput').focus(), 100);
     }
-    window.editProduct = editProduct;
 
     document.getElementById('cancelEditBtn').addEventListener('click', () => {
       editModal.classList.add('hidden');
@@ -635,7 +667,6 @@
       document.getElementById('deleteTargetName').textContent = name;
       deleteModal.classList.remove('hidden');
     }
-    window.openDelete = openDelete;
 
     document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
       deleteModal.classList.add('hidden');
@@ -685,7 +716,6 @@
         alert(e.message || 'Failed to generate license');
       }
     }
-    window.downloadLicense = downloadLicense;
 
     // ============================================================
     // Close modals with Escape
